@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="420" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">15.6 · innodb_force_recovery — the last-resort salvage (levels 1–6)</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">InnoDB won't even start (corruption broke recovery) → coax it up JUST to DUMP the data · higher = MORE dangerous</text>
+
+  <!-- the ladder -->
+  <rect x="40" y="62" width="500" height="40" rx="6" fill="#11161c" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="55" y="80" fill="#7ee2a8" font-size="11" font-weight="700">1 · SRV_FORCE_IGNORE_CORRUPT</text>
+  <text x="55" y="95" fill="#a8e6c2" font-size="9">let the server start, ignore some corruption (safest)</text>
+  <rect x="555" y="62" width="205" height="40" rx="6" fill="#0d1b12" stroke="#2ea043"/><text x="657" y="86" fill="#7ee2a8" font-size="9" text-anchor="middle">least dangerous</text>
+
+  <rect x="40" y="106" width="500" height="34" rx="6" fill="#11161c" stroke="#7ee2a8" stroke-width="1.2"/>
+  <text x="55" y="127" fill="#a8e6c2" font-size="10">2 · NO_BACKGROUND — don't run purge/background threads</text>
+
+  <rect x="40" y="144" width="500" height="34" rx="6" fill="#11161c" stroke="#d29922" stroke-width="1.2"/>
+  <text x="55" y="165" fill="#f5e6c7" font-size="10">3 · NO_TRX_UNDO — don't roll back uncommitted transactions</text>
+
+  <rect x="40" y="182" width="500" height="34" rx="6" fill="#11161c" stroke="#d29922" stroke-width="1.2"/>
+  <text x="55" y="203" fill="#f5e6c7" font-size="10">4 · NO_IBUF_MERGE — skip insert buffer merge (≥4 forces READ-ONLY)</text>
+
+  <rect x="40" y="220" width="500" height="34" rx="6" fill="#11161c" stroke="#ff7b72" stroke-width="1.2"/>
+  <text x="55" y="241" fill="#f5b7b3" font-size="10">5 · NO_UNDO_LOG_SCAN — don't read the undo logs (inconsistent!)</text>
+
+  <rect x="40" y="258" width="500" height="34" rx="6" fill="#11161c" stroke="#da3633" stroke-width="1.6"/>
+  <text x="55" y="279" fill="#ff7b72" font-size="10">6 · NO_LOG_REDO — don't even apply the redo log (MOST dangerous)</text>
+  <rect x="555" y="258" width="205" height="34" rx="6" fill="#3a1410" stroke="#da3633"/><text x="657" y="279" fill="#ff7b72" font-size="9" text-anchor="middle">can corrupt FURTHER</text>
+
+  <!-- the procedure -->
+  <rect x="20" y="304" width="760" height="58" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="400" y="324" fill="#7ee2a8" font-size="11.5" font-weight="700" text-anchor="middle">THE CORRECT PROCEDURE (a salvage, NOT a fix):</text>
+  <text x="400" y="344" fill="#a8e6c2" font-size="9.5" text-anchor="middle">① lowest level that starts → ② go READ-ONLY → ③ mysqldump (get the ledger out) → ④ build a FRESH server, reload</text>
+  <text x="400" y="358" fill="#a8e6c2" font-size="9.5" text-anchor="middle">→ ⑤ RECONCILE (M12/12.14 — force_recovery may extract INCONSISTENT data) · NEVER run production on a forced server</text>
+
+  <rect x="20" y="370" width="760" height="42" rx="9" fill="#11161c" stroke="#1f6feb" stroke-width="1.3"/>
+  <text x="400" y="390" fill="#9fd0ff" font-size="10.5" font-weight="700" text-anchor="middle">💰 VERDICT: money at RISK of being WRONG (may extract inconsistent data) → MUST reconcile before trust</text>
+  <text x="400" y="406" fill="#cde3ff" font-size="9.5" text-anchor="middle">real prevention: tested backups + healthy replicas (15.10/M13) → RESTORE-CLEAN instead of salvage → you never need force_recovery</text>
+</svg>

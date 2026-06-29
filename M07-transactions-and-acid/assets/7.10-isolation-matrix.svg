@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 460" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="780" height="460" fill="#0f1419"/>
+  <text x="390" y="30" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">7.10 · The isolation × anomaly matrix</text>
+  <text x="390" y="50" fill="#8b98a5" font-size="12" text-anchor="middle">each level prevents everything below it, plus one more anomaly · ✓ = permitted · ✗ = prevented</text>
+
+  <!-- column headers -->
+  <text x="250" y="92" fill="#9fd0ff" font-size="12" font-weight="600" text-anchor="middle">Dirty read</text>
+  <text x="400" y="92" fill="#9fd0ff" font-size="12" font-weight="600" text-anchor="middle">Non-repeatable</text>
+  <text x="550" y="92" fill="#9fd0ff" font-size="12" font-weight="600" text-anchor="middle">Phantom</text>
+  <text x="690" y="92" fill="#d2a8ff" font-size="12" font-weight="600" text-anchor="middle">concurrency</text>
+
+  <!-- row: READ UNCOMMITTED -->
+  <rect x="20" y="100" width="180" height="56" rx="6" fill="#3a1a1a" stroke="#da3633"/>
+  <text x="110" y="125" fill="#ff7b72" font-size="12.5" font-weight="600" text-anchor="middle">READ</text>
+  <text x="110" y="143" fill="#ff7b72" font-size="12.5" font-weight="600" text-anchor="middle">UNCOMMITTED</text>
+  <text x="250" y="134" fill="#ff7b72" font-size="16" text-anchor="middle">✓</text>
+  <text x="400" y="134" fill="#ff7b72" font-size="16" text-anchor="middle">✓</text>
+  <text x="550" y="134" fill="#ff7b72" font-size="16" text-anchor="middle">✓</text>
+  <text x="690" y="134" fill="#7ee2a8" font-size="11" text-anchor="middle">highest</text>
+
+  <!-- row: READ COMMITTED -->
+  <rect x="20" y="162" width="180" height="56" rx="6" fill="#3a2a14" stroke="#d29922"/>
+  <text x="110" y="196" fill="#f0c674" font-size="12.5" font-weight="600" text-anchor="middle">READ COMMITTED</text>
+  <text x="250" y="196" fill="#7ee2a8" font-size="16" text-anchor="middle">✗</text>
+  <text x="400" y="196" fill="#ff7b72" font-size="16" text-anchor="middle">✓</text>
+  <text x="550" y="196" fill="#ff7b72" font-size="16" text-anchor="middle">✓</text>
+  <text x="690" y="196" fill="#a8e6c2" font-size="11" text-anchor="middle">high</text>
+
+  <!-- row: REPEATABLE READ -->
+  <rect x="20" y="224" width="180" height="56" rx="6" fill="#1b3a5c" stroke="#2f6db5"/>
+  <text x="110" y="258" fill="#9fd0ff" font-size="12.5" font-weight="600" text-anchor="middle">REPEATABLE READ</text>
+  <text x="250" y="258" fill="#7ee2a8" font-size="16" text-anchor="middle">✗</text>
+  <text x="400" y="258" fill="#7ee2a8" font-size="16" text-anchor="middle">✗</text>
+  <!-- phantom cell: standard ✓ but InnoDB ✗ -->
+  <rect x="500" y="232" width="100" height="40" rx="5" fill="#13361f" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="550" y="251" fill="#f0c674" font-size="12.5" text-anchor="middle">✓ std</text>
+  <text x="550" y="266" fill="#7ee2a8" font-size="11.5" text-anchor="middle">✗ InnoDB*</text>
+  <text x="690" y="258" fill="#cde3ff" font-size="11" text-anchor="middle">medium</text>
+
+  <!-- row: SERIALIZABLE -->
+  <rect x="20" y="286" width="180" height="56" rx="6" fill="#13361f" stroke="#2ea043"/>
+  <text x="110" y="320" fill="#7ee2a8" font-size="12.5" font-weight="600" text-anchor="middle">SERIALIZABLE</text>
+  <text x="250" y="320" fill="#7ee2a8" font-size="16" text-anchor="middle">✗</text>
+  <text x="400" y="320" fill="#7ee2a8" font-size="16" text-anchor="middle">✗</text>
+  <text x="550" y="320" fill="#7ee2a8" font-size="16" text-anchor="middle">✗</text>
+  <text x="690" y="320" fill="#ff7b72" font-size="11" text-anchor="middle">lowest</text>
+
+  <!-- InnoDB annotation -->
+  <rect x="20" y="356" width="740" height="34" rx="6" fill="#11161c" stroke="#2ea043"/>
+  <text x="35" y="377" fill="#7ee2a8" font-size="11.5">* InnoDB's REPEATABLE READ PREVENTS phantoms (next-key locks, M08) — stronger than the SQL standard. InnoDB default = REPEATABLE READ (7.13b).</text>
+
+  <!-- omission caveat -->
+  <rect x="20" y="396" width="740" height="48" rx="6" fill="#2d1a1a" stroke="#da3633"/>
+  <text x="35" y="416" fill="#ff7b72" font-size="11.5" font-weight="600">⚠ THE MATRIX OMITS THE WRITE ANOMALIES:</text>
+  <text x="35" y="434" fill="#f5c2c0" font-size="11.5">LOST UPDATE (7.11) &amp; WRITE SKEW (7.13) are NOT prevented by RR alone → need atomic update / FOR UPDATE / SERIALIZABLE.</text>
+</svg>

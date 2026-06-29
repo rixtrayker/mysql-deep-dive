@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="420" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">15.3 · Split-brain — two writers → the ledger FORKS irreconcilably</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">worse than data loss (two conflicting truths, no clean merge) · fencing BEATS reconciliation · never fail over without fencing</text>
+
+  <!-- cause -->
+  <rect x="20" y="60" width="760" height="40" rx="8" fill="#11161c" stroke="#d29922" stroke-width="1.3"/>
+  <text x="400" y="78" fill="#f0c674" font-size="10.5" font-weight="700" text-anchor="middle">CAUSE: a partition (both sides keep serving) OR a botched failover (promote a replica WITHOUT fencing the old primary)</text>
+  <text x="400" y="94" fill="#f5e6c7" font-size="9.5" text-anchor="middle">→ the "single writer" assumption violated without enforcement</text>
+
+  <!-- two nodes -->
+  <rect x="60" y="116" width="300" height="120" rx="10" fill="#11161c" stroke="#da3633" stroke-width="1.6"/>
+  <text x="210" y="138" fill="#ff7b72" font-size="11.5" font-weight="700" text-anchor="middle">NODE A (thinks it's primary)</text>
+  <rect x="80" y="150" width="260" height="24" rx="4" fill="#3a1410" stroke="#da3633"/><text x="210" y="167" fill="#f5b7b3" font-size="9" text-anchor="middle">transfer T1: acct 7 balance → $50</text>
+  <rect x="80" y="180" width="260" height="24" rx="4" fill="#3a1410" stroke="#da3633"/><text x="210" y="197" fill="#f5b7b3" font-size="9" text-anchor="middle">transfer T2: acct 7 → $30 (different!)</text>
+  <text x="210" y="224" fill="#ff7b72" font-size="9" text-anchor="middle">GTID set: …:1-2</text>
+
+  <rect x="440" y="116" width="300" height="120" rx="10" fill="#11161c" stroke="#da3633" stroke-width="1.6"/>
+  <text x="590" y="138" fill="#ff7b72" font-size="11.5" font-weight="700" text-anchor="middle">NODE B (also accepting writes)</text>
+  <rect x="460" y="150" width="260" height="24" rx="4" fill="#3a1410" stroke="#da3633"/><text x="590" y="167" fill="#f5b7b3" font-size="9" text-anchor="middle">transfer T3: acct 7 balance → $80</text>
+  <rect x="460" y="180" width="260" height="24" rx="4" fill="#3a1410" stroke="#da3633"/><text x="590" y="197" fill="#f5b7b3" font-size="9" text-anchor="middle">transfer T4: acct 7 → $120 (conflicts!)</text>
+  <text x="590" y="224" fill="#ff7b72" font-size="9" text-anchor="middle">GTID set: …:3-4 (disjoint!)</text>
+
+  <text x="400" y="190" fill="#ff7b72" font-size="20" font-weight="700" text-anchor="middle">⚡</text>
+  <text x="400" y="174" fill="#8b98a5" font-size="8.5" text-anchor="middle">no</text>
+  <text x="400" y="208" fill="#8b98a5" font-size="8.5" text-anchor="middle">comms</text>
+
+  <rect x="20" y="248" width="760" height="44" rx="9" fill="#11161c" stroke="#da3633" stroke-width="1.6"/>
+  <text x="400" y="268" fill="#ff7b72" font-size="11.5" font-weight="700" text-anchor="middle">→ the LEDGER FORKED — two conflicting versions, both with REAL money movements, NO automatic merge</text>
+  <text x="400" y="284" fill="#f5b7b3" font-size="9.5" text-anchor="middle">which of two conflicting transfers on acct 7 is "real"? both debited real money → manual, lossy reconciliation (the worst recovery)</text>
+
+  <!-- prevention -->
+  <rect x="20" y="302" width="375" height="56" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="207" y="322" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">PREVENTION (the only good option)</text>
+  <text x="207" y="340" fill="#a8e6c2" font-size="9">FENCING/STONITH (kill/isolate old primary BEFORE promote)</text>
+  <text x="207" y="352" fill="#a8e6c2" font-size="9">OR quorum (minority refuses writes, M10/10.9/10.11) + super_read_only</text>
+
+  <rect x="405" y="302" width="375" height="56" rx="9" fill="#11161c" stroke="#8957e5" stroke-width="1.3"/>
+  <text x="592" y="322" fill="#d2a8ff" font-size="11" font-weight="700" text-anchor="middle">RECOVERY (slow, manual, lossy)</text>
+  <text x="592" y="340" fill="#e7d6ff" font-size="9">stop both → pick authoritative → GTID set-diff the other</text>
+  <text x="592" y="352" fill="#e7d6ff" font-size="9">→ manually reconcile each conflict vs external records (M12/12.14)</text>
+
+  <rect x="20" y="368" width="760" height="42" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="400" y="390" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">💰 VERDICT: money DUPLICATED/FORKED &amp; effectively LOST — the WORST catastrophe, UNRECOVERABLE cleanly</text>
+  <text x="400" y="406" fill="#a8e6c2" font-size="9.5" text-anchor="middle">"fence before promote, ALWAYS" — fencing/quorum is the ONLY acceptable strategy (M10/10.11)</text>
+</svg>

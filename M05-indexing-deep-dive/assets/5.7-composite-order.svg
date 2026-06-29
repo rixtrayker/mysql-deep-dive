@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="760" height="400" fill="#0f1419"/>
+  <text x="380" y="28" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">5.7 · Composite index (account_id, created_at) — leftmost-prefix</text>
+  <text x="380" y="48" fill="#8b98a5" font-size="12" text-anchor="middle">sorted by account_id, then created_at within each account → serves a leading prefix only</text>
+
+  <!-- sorted leaf order -->
+  <rect x="40" y="70" width="680" height="120" rx="8" fill="#11161c" stroke="#30363d" stroke-width="1.5"/>
+  <text x="380" y="90" fill="#e6edf3" text-anchor="middle" font-size="12" font-weight="600">index leaf order (account_id ▸ then created_at)</text>
+  <g font-size="11" text-anchor="middle">
+    <rect x="55"  y="105" width="105" height="60" rx="5" fill="#1b3a5c" stroke="#2f6db5"/>
+    <text x="107" y="125" fill="#cde3ff">acct 42</text><text x="107" y="143" fill="#9fd0ff">Jun 01</text><text x="107" y="159" fill="#9fd0ff">Jun 05</text>
+    <rect x="170" y="105" width="105" height="60" rx="5" fill="#1b3a5c" stroke="#2f6db5"/>
+    <text x="222" y="125" fill="#cde3ff">acct 42</text><text x="222" y="143" fill="#9fd0ff">Jun 12</text><text x="222" y="159" fill="#9fd0ff">Jun 28</text>
+    <rect x="285" y="105" width="105" height="60" rx="5" fill="#143a2a" stroke="#2ea043"/>
+    <text x="337" y="125" fill="#c7f5d9">acct 43</text><text x="337" y="143" fill="#a8e6c2">Jun 02</text><text x="337" y="159" fill="#a8e6c2">Jun 09</text>
+    <rect x="400" y="105" width="105" height="60" rx="5" fill="#143a2a" stroke="#2ea043"/>
+    <text x="452" y="125" fill="#c7f5d9">acct 43</text><text x="452" y="143" fill="#a8e6c2">Jun 20</text><text x="452" y="159" fill="#a8e6c2">Jul 01</text>
+    <rect x="515" y="105" width="105" height="60" rx="5" fill="#2d2150" stroke="#8957e5"/>
+    <text x="567" y="125" fill="#e7d6ff">acct 50</text><text x="567" y="143" fill="#cdb4ff">Jun 03</text><text x="567" y="159" fill="#cdb4ff">Jun 30</text>
+    <rect x="630" y="105" width="75" height="60" rx="5" fill="#2d2150" stroke="#8957e5"/>
+    <text x="667" y="125" fill="#e7d6ff">acct 51</text><text x="667" y="143" fill="#cdb4ff">…</text>
+  </g>
+  <text x="380" y="182" fill="#8b98a5" text-anchor="middle" font-size="10.5">each account's rows are CONTIGUOUS, and within an account they're sorted by date</text>
+
+  <!-- which queries it serves -->
+  <text x="40" y="225" fill="#e6edf3" font-size="13" font-weight="600">which queries can use this index?</text>
+
+  <rect x="40" y="238" width="680" height="30" rx="5" fill="#13361f" stroke="#2ea043"/>
+  <text x="55" y="258" fill="#7ee2a8" font-size="12">✓ WHERE account_id = 42                          → seek to acct 42's contiguous block</text>
+
+  <rect x="40" y="274" width="680" height="30" rx="5" fill="#13361f" stroke="#2ea043"/>
+  <text x="55" y="294" fill="#7ee2a8" font-size="12">✓ WHERE account_id = 42 AND created_at ≥ 'Jun 12'  → sub-range within that block</text>
+
+  <rect x="40" y="310" width="680" height="30" rx="5" fill="#13361f" stroke="#2ea043"/>
+  <text x="55" y="330" fill="#7ee2a8" font-size="12">✓ WHERE account_id = 42 ORDER BY created_at        → already in order → NO filesort (5.10)</text>
+
+  <rect x="40" y="346" width="680" height="30" rx="5" fill="#3a1a1a" stroke="#da3633"/>
+  <text x="55" y="366" fill="#ff7b72" font-size="12">✗ WHERE created_at ≥ 'Jun 12'  (no account_id)     → dates scattered across blocks → can't seek → FULL SCAN</text>
+</svg>

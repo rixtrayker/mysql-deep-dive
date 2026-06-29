@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="440" fill="#0f1419"/>
+  <text x="400" y="30" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">8.3 · Read view — which version is visible to my snapshot?</text>
+  <text x="400" y="50" fill="#8b98a5" font-size="12" text-anchor="middle">a read view = the set of transactions active (uncommitted) at snapshot time · timing = the isolation level</text>
+
+  <!-- read view box -->
+  <rect x="40" y="78" width="720" height="60" rx="8" fill="#1b3a5c" stroke="#2f6db5" stroke-width="1.5"/>
+  <text x="55" y="100" fill="#9fd0ff" font-size="12.5" font-weight="700">My READ VIEW (snapshot taken now)</text>
+  <text x="55" y="122" fill="#cde3ff" font-size="11.5">active (uncommitted) at snapshot: { T30 } · committed-before: T10, T20 · my own txn id: T25</text>
+
+  <!-- visibility decision flow -->
+  <text x="400" y="165" fill="#e6edf3" font-size="13" font-weight="700" text-anchor="middle">visibility check, walking the version chain (8.2)</text>
+
+  <rect x="40" y="180" width="720" height="46" rx="6" fill="#3a1a1a" stroke="#da3633"/>
+  <text x="55" y="200" fill="#ff7b72" font-size="12">CURRENT · DB_TRX_ID = T30 → T30 is ACTIVE in my read view → ✗ NOT visible → follow roll_ptr ▼</text>
+  <text x="55" y="218" fill="#f5c2c0" font-size="10.5">(creator still uncommitted at my snapshot)</text>
+
+  <rect x="40" y="234" width="720" height="46" rx="6" fill="#143a2a" stroke="#2ea043"/>
+  <text x="55" y="254" fill="#7ee2a8" font-size="12">UNDO v2 · DB_TRX_ID = T20 → T20 COMMITTED before my snapshot → ✓ VISIBLE → read this version</text>
+  <text x="55" y="272" fill="#a8e6c2" font-size="10.5">(first visible version found — stop here)</text>
+
+  <!-- rule summary -->
+  <rect x="40" y="296" width="350" height="96" rx="8" fill="#11161c" stroke="#30363d"/>
+  <text x="215" y="316" fill="#e6edf3" font-size="12" font-weight="700" text-anchor="middle">visibility rule</text>
+  <text x="55" y="338" fill="#7ee2a8" font-size="11">✓ my own writes</text>
+  <text x="55" y="356" fill="#7ee2a8" font-size="11">✓ committed BEFORE my snapshot</text>
+  <text x="55" y="374" fill="#ff7b72" font-size="11">✗ active at snapshot / started after → skip ▼</text>
+
+  <!-- timing = isolation level -->
+  <rect x="410" y="296" width="350" height="96" rx="8" fill="#11161c" stroke="#8957e5"/>
+  <text x="585" y="316" fill="#d2a8ff" font-size="12" font-weight="700" text-anchor="middle">WHEN the read view is made = the level (8.14)</text>
+  <text x="425" y="338" fill="#cde3ff" font-size="11">REPEATABLE READ: ONE read view at first read,</text>
+  <text x="438" y="354" fill="#9fd0ff" font-size="11">reused → stable, repeatable snapshot</text>
+  <text x="425" y="374" fill="#cde3ff" font-size="11">READ COMMITTED: NEW read view per statement</text>
+  <text x="438" y="390" fill="#9fd0ff" font-size="10.5">→ sees latest committed (non-repeatable reads)</text>
+
+  <text x="400" y="416" fill="#f0c674" font-size="11" text-anchor="middle">plain SELECT uses the read view (MVCC) · locking reads (FOR UPDATE) bypass it → read latest + lock (8.4)</text>
+</svg>

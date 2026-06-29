@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="470" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">15.15 · "I lost data — now what?" — the money-safe incident runbook</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">CONTAIN → ASSESS → RECOVER → VERIFY → POST-MORTEM · the order is SACRED for money</text>
+
+  <rect x="30" y="60" width="740" height="60" rx="10" fill="#11161c" stroke="#da3633" stroke-width="1.8"/>
+  <text x="50" y="82" fill="#ff7b72" font-size="12.5" font-weight="700">① CONTAIN FIRST (before investigating — the incident worsens while you diagnose)</text>
+  <text x="50" y="102" fill="#f5b7b3" font-size="9.5">halt the bad deploy/script/query · FENCE a diverging node (15.3 — never let split-brain keep writing) · freeze writes to the affected scope</text>
+  <text x="50" y="115" fill="#8b98a5" font-size="9">containment is FIRST, always</text>
+
+  <path d="M400 120 L400 130" stroke="#8b98a5" stroke-width="1.4" marker-end="url(#s)"/>
+  <rect x="30" y="132" width="740" height="56" rx="10" fill="#11161c" stroke="#d29922" stroke-width="1.4"/>
+  <text x="50" y="154" fill="#f0c674" font-size="12" font-weight="700">② ASSESS — classify the failure (route to the scenario) + QUANTIFY</text>
+  <text x="50" y="174" fill="#f5e6c7" font-size="9">lost commits (15.2)? split-brain (15.3)? corruption (15.5)? DROP (15.8)? app race (15.9)? backup issue (15.10)? · reconcile (M12) → which accounts, how much</text>
+
+  <path d="M400 188 L400 198" stroke="#8b98a5" stroke-width="1.4" marker-end="url(#s)"/>
+  <rect x="30" y="200" width="740" height="92" rx="10" fill="#11161c" stroke="#1f6feb" stroke-width="1.4"/>
+  <text x="50" y="222" fill="#9fd0ff" font-size="12" font-weight="700">③ RECOVER — the right path per the scenario</text>
+  <rect x="48" y="232" width="170" height="52" rx="5" fill="#13361f" stroke="#2ea043"/><text x="133" y="251" fill="#7ee2a8" font-size="8.5" text-anchor="middle">logical / DROP</text><text x="133" y="266" fill="#a8e6c2" font-size="8" text-anchor="middle">→ PITR (15.7/15.8)</text><text x="133" y="279" fill="#a8e6c2" font-size="8" text-anchor="middle">M13/13.3</text>
+  <rect x="226" y="232" width="170" height="52" rx="5" fill="#1b3a5c" stroke="#2f6db5"/><text x="311" y="251" fill="#cde3ff" font-size="8.5" text-anchor="middle">node loss</text><text x="311" y="266" fill="#9fd0ff" font-size="8" text-anchor="middle">→ failover</text><text x="311" y="279" fill="#9fd0ff" font-size="8" text-anchor="middle">(M10/10.10)</text>
+  <rect x="404" y="232" width="170" height="52" rx="5" fill="#3a1410" stroke="#da3633"/><text x="489" y="251" fill="#ff7b72" font-size="8.5" text-anchor="middle">corruption / split-brain</text><text x="489" y="266" fill="#f5b7b3" font-size="8" text-anchor="middle">→ restore+PITR / force_</text><text x="489" y="279" fill="#f5b7b3" font-size="8" text-anchor="middle">recovery / manual (15.3/15.6)</text>
+  <rect x="582" y="232" width="170" height="52" rx="5" fill="#2d2150" stroke="#8957e5"/><text x="667" y="251" fill="#d2a8ff" font-size="8.5" text-anchor="middle">app-level / distributed</text><text x="667" y="266" fill="#e7d6ff" font-size="8" text-anchor="middle">→ re-derive from the</text><text x="667" y="279" fill="#e7d6ff" font-size="8" text-anchor="middle">immutable ledger (15.9)</text>
+
+  <path d="M400 292 L400 302" stroke="#8b98a5" stroke-width="1.4" marker-end="url(#s)"/>
+  <rect x="30" y="304" width="740" height="56" rx="10" fill="#0d1b12" stroke="#2ea043" stroke-width="1.8"/>
+  <text x="50" y="326" fill="#7ee2a8" font-size="12.5" font-weight="700">④ VERIFY ★ (NON-NEGOTIABLE for money)</text>
+  <text x="50" y="346" fill="#a8e6c2" font-size="9.5">RECONCILE the recovered data (M12/12.14): balance = Σ entries, internal = external — PROVE correctness · "recovered" without reconciliation is NOT recovered</text>
+
+  <path d="M400 360 L400 370" stroke="#8b98a5" stroke-width="1.4" marker-end="url(#s)"/>
+  <rect x="30" y="372" width="740" height="44" rx="10" fill="#11161c" stroke="#8957e5" stroke-width="1.3"/>
+  <text x="50" y="394" fill="#d2a8ff" font-size="12" font-weight="700">⑤ POST-MORTEM</text>
+  <text x="180" y="394" fill="#e7d6ff" font-size="9.5">root cause → prevent recurrence: the early-warning (13.11), tested restore (13.5), config (M09), fencing (M10) that WOULD have prevented it → 15.16</text>
+
+  <rect x="30" y="424" width="740" height="38" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="400" y="447" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">💰 the discipline (contain → recover → VERIFY/reconcile) is what makes the money verdict answerable + the recovery trustworthy</text>
+
+  <defs><marker id="s" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b98a5"/></marker></defs>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="470" fill="#0f1419"/>
+  <text x="400" y="30" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">9.7 · The durability chain — where "durable" really means, where fsync LIES</text>
+  <text x="400" y="50" fill="#8b98a5" font-size="12" text-anchor="middle">"written to disk" is a chain of layers · data can be lost (volatile) at any · fsync forces it down · but layers can lie</text>
+
+  <!-- layers, top (volatile) to bottom (durable) -->
+  <!-- L1 app -->
+  <rect x="120" y="72" width="560" height="46" rx="6" fill="#3a1a1a" stroke="#da3633" stroke-width="1.4"/>
+  <text x="135" y="92" fill="#ff7b72" font-size="12" font-weight="600">1 · APP — InnoDB log buffer (process RAM)</text>
+  <text x="135" y="109" fill="#f5c2c0" font-size="10.5">VOLATILE — crash loses anything not pushed down</text>
+  <text x="660" y="100" fill="#ff7b72" font-size="11" text-anchor="end">⚠ volatile</text>
+
+  <!-- L2 OS cache -->
+  <rect x="120" y="126" width="560" height="46" rx="6" fill="#3a2a14" stroke="#d29922" stroke-width="1.4"/>
+  <text x="135" y="146" fill="#f0c674" font-size="12" font-weight="600">2 · OS PAGE CACHE (kernel RAM) — write() lands HERE</text>
+  <text x="135" y="163" fill="#f5e6c7" font-size="10.5">write() returning = "kernel has it", NOT "on disk" · power loss loses it</text>
+  <text x="660" y="154" fill="#d29922" font-size="11" text-anchor="end">⚠ volatile</text>
+
+  <!-- L3 drive cache -->
+  <rect x="120" y="180" width="560" height="56" rx="6" fill="#2d1a3a" stroke="#8957e5" stroke-width="1.6"/>
+  <text x="135" y="200" fill="#d2a8ff" font-size="12" font-weight="700">3 · DRIVE / CONTROLLER WRITE CACHE (DRAM on the device)</text>
+  <text x="135" y="218" fill="#e7d6ff" font-size="10.5">⚠️ THE LYING-DISK PROBLEM: a drive may ACK fsync while data is still in THIS volatile cache</text>
+  <text x="135" y="231" fill="#ff7b72" font-size="10.5">→ power loss AFTER fsync returned still loses the "durable" data</text>
+  <text x="660" y="208" fill="#ff7b72" font-size="11" text-anchor="end">⚠ may LIE</text>
+
+  <!-- L4 platter -->
+  <rect x="120" y="244" width="560" height="46" rx="6" fill="#143a2a" stroke="#2ea043" stroke-width="1.6"/>
+  <text x="135" y="264" fill="#7ee2a8" font-size="12" font-weight="700">4 · PHYSICAL PLATTER / NAND — the ONLY truly non-volatile layer ✓</text>
+  <text x="135" y="281" fill="#a8e6c2" font-size="10.5">data is durable ONLY once it reaches here</text>
+  <text x="660" y="272" fill="#7ee2a8" font-size="11" text-anchor="end">✓ durable</text>
+
+  <!-- fsync arrow -->
+  <path d="M90,90 L90,267" stroke="#58a6ff" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <text x="60" y="180" fill="#58a6ff" font-size="11" font-weight="600" transform="rotate(-90 60 180)">fsync forces ↓</text>
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+
+  <!-- the lesson -->
+  <rect x="30" y="306" width="740" height="138" rx="8" fill="#11161c" stroke="#30363d"/>
+  <text x="400" y="328" fill="#e6edf3" font-size="13" font-weight="700" text-anchor="middle">"I called fsync, it returned" can be FALSE — durability is only as good as the last HONEST layer</text>
+  <text x="50" y="352" fill="#ff7b72" font-size="11">● an acknowledgment is only as trustworthy as the weakest layer that LIED (acked early from volatile cache)</text>
+  <text x="50" y="374" fill="#7ee2a8" font-size="11">● for TRUE durability: drive write cache DISABLED, or NON-VOLATILE (battery/capacitor-backed), + honest fsync semantics</text>
+  <text x="50" y="396" fill="#9fd0ff" font-size="11">● cloud/network storage (EBS…) adds MORE layers + its own fsync semantics → "fast" ≠ durable; verify its guarantees</text>
+  <text x="50" y="418" fill="#f0c674" font-size="11">● this is HOW a "confirmed" payment is silently lost on power loss → the M15 data-loss territory (money-never-lies)</text>
+  <text x="50" y="438" fill="#8b98a5" font-size="10.5">universal: OS cache · drive cache · RAID cache · network-storage cache · replication acks — ALL sit between "wrote it" and "survives power loss"</text>
+</svg>

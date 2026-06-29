@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="480" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">14.16 · The master cheat-sheet — the whole journey, one page of recall</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">M01–M13 condensed · the page you recall under pressure (incident or interview)</text>
+
+  <!-- money settings (the star box) -->
+  <rect x="20" y="60" width="375" height="128" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.8"/>
+  <text x="207" y="80" fill="#7ee2a8" font-size="12" font-weight="700" text-anchor="middle">★ THE MONEY SETTINGS (money-never-lies)</text>
+  <text x="35" y="100" fill="#a8e6c2" font-size="9.5">money type → DECIMAL / integer minor units (NEVER FLOAT)</text>
+  <text x="35" y="116" fill="#a8e6c2" font-size="9.5">durability → flush_log_at_trx_commit=1 + sync_binlog=1</text>
+  <text x="35" y="132" fill="#a8e6c2" font-size="9.5">replication → semi-sync (monitored) + ROW format + GTID</text>
+  <text x="35" y="148" fill="#a8e6c2" font-size="9.5">distributed → idempotency keys + outbox/CDC + reconciliation</text>
+  <text x="35" y="164" fill="#a8e6c2" font-size="9.5">transfer → single-shard ACID (co-locate) + atomic debit=credit</text>
+  <text x="35" y="182" fill="#8b98a5" font-size="8.5">the non-negotiables for not losing money</text>
+
+  <!-- defaults -->
+  <rect x="405" y="60" width="375" height="128" rx="9" fill="#11161c" stroke="#1f6feb" stroke-width="1.3"/>
+  <text x="592" y="80" fill="#9fd0ff" font-size="12" font-weight="700" text-anchor="middle">DEFAULTS / NUMBERS TO KNOW</text>
+  <text x="420" y="100" fill="#cde3ff" font-size="9.5">engine = InnoDB · isolation = REPEATABLE READ</text>
+  <text x="420" y="116" fill="#cde3ff" font-size="9.5">buffer pool ≈ 70–80% of RAM (the biggest lever, M09)</text>
+  <text x="420" y="132" fill="#cde3ff" font-size="9.5">binlog = ROW · GTID = ON · connection pool = small</text>
+  <text x="420" y="148" fill="#cde3ff" font-size="9.5">page = 16KB · clustered PK = the table (M05)</text>
+  <text x="420" y="164" fill="#cde3ff" font-size="9.5">MVCC = consistent reads · undo = version chains (M08)</text>
+  <text x="420" y="180" fill="#8b98a5" font-size="8.5">redo = WAL (durability) · binlog = replication/PITR/CDC</text>
+
+  <!-- decision one-liners -->
+  <rect x="20" y="196" width="375" height="138" rx="9" fill="#11161c" stroke="#d29922" stroke-width="1.3"/>
+  <text x="207" y="216" fill="#f0c674" font-size="12" font-weight="700" text-anchor="middle">DECISION ONE-LINERS</text>
+  <text x="35" y="236" fill="#f5e6c7" font-size="9.5">which index → (=cols, range, sort); covering if hot (M05)</text>
+  <text x="35" y="252" fill="#f5e6c7" font-size="9.5">which isolation → weakest-correct; money = RR + FOR UPDATE</text>
+  <text x="35" y="268" fill="#f5e6c7" font-size="9.5">scale → up → replicas → partition → SHARD (shard last)</text>
+  <text x="35" y="284" fill="#f5e6c7" font-size="9.5">distributed → co-locate → Saga → idempotency → outbox/CDC → reconcile</text>
+  <text x="35" y="300" fill="#f5e6c7" font-size="9.5">durability → 1/1 for money; group commit amortizes (M09)</text>
+  <text x="35" y="316" fill="#f5e6c7" font-size="9.5">is MySQL right? → ACID OLTP yes; analytics/search/KV → derive via CDC</text>
+
+  <!-- triage entry points -->
+  <rect x="405" y="196" width="375" height="138" rx="9" fill="#11161c" stroke="#da3633" stroke-width="1.3"/>
+  <text x="592" y="216" fill="#ff7b72" font-size="12" font-weight="700" text-anchor="middle">TRIAGE ENTRY POINTS</text>
+  <text x="420" y="236" fill="#f5b7b3" font-size="9.5">replica lag → 14.6 (parallel apply, slow query, long txn)</text>
+  <text x="420" y="252" fill="#f5b7b3" font-size="9.5">deadlock → 14.4 (lock order, retry victim, SKIP LOCKED)</text>
+  <text x="420" y="268" fill="#f5b7b3" font-size="9.5">blocked? → 14.5 (lock-wait vs deadlock vs MDL stall)</text>
+  <text x="420" y="284" fill="#f5b7b3" font-size="9.5">slow query → 14.7 (slow log → digest → EXPLAIN → fix)</text>
+  <text x="420" y="300" fill="#f5b7b3" font-size="9.5">LOST DATA → 14.8 → M15 (CONTAIN → recover → VERIFY)</text>
+  <text x="420" y="316" fill="#8b98a5" font-size="9">matrices: isolation×anomaly (14.3) · durability (14.9) · force-recovery (M15)</text>
+
+  <!-- threads -->
+  <rect x="20" y="342" width="760" height="58" rx="9" fill="#11161c" stroke="#8957e5" stroke-width="1.3"/>
+  <text x="400" y="362" fill="#d2a8ff" font-size="12" font-weight="700" text-anchor="middle">THE FOUR THREADS (the lenses running through everything)</text>
+  <text x="400" y="382" fill="#e7d6ff" font-size="9.5" text-anchor="middle">DURABILITY ("what survives a crash?") · MONEY-NEVER-LIES ("did money get lost/duplicated?")</text>
+  <text x="400" y="394" fill="#e7d6ff" font-size="9.5" text-anchor="middle">GENERICS-FIRST (the agnostic principle before the MySQL specifics) · TRADEOFF (nothing is free)</text>
+
+  <!-- the journey -->
+  <rect x="20" y="408" width="760" height="60" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="400" y="428" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">THE JOURNEY: model (M01–M03) → optimize (M04–M06) → ACID/MVCC/durability (M07–M09)</text>
+  <text x="400" y="446" fill="#a8e6c2" font-size="10" text-anchor="middle">→ replicate/shard/distribute (M10–M12) → operate (M13) → triage (M14) → fail-safely (M15) → fintech capstone (M16)</text>
+  <text x="400" y="462" fill="#8b98a5" font-size="9" text-anchor="middle">single-node correct → durable → node-loss-durable → write-scaled → distributed-correct → operable → recoverable → money-never-lies</text>
+</svg>

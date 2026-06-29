@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="480" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">12.16 · The consistent-enough payments platform — money never lost/duplicated</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">strong+atomic where money moves · eventual+idempotent+reconciled everywhere else · per-operation (12.15)</text>
+
+  <!-- money path -->
+  <rect x="30" y="62" width="360" height="150" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="1.6"/>
+  <text x="210" y="84" fill="#7ee2a8" font-size="12" font-weight="700" text-anchor="middle">THE MONEY PATH — strong + atomic</text>
+  <rect x="48" y="96" width="324" height="42" rx="6" fill="#13361f" stroke="#2ea043"/>
+  <text x="210" y="113" fill="#a8e6c2" font-size="9.5" text-anchor="middle">common transfer (co-located, M11/11.9): ONE single-shard ACID txn</text>
+  <text x="210" y="128" fill="#7ee2a8" font-size="9.5" text-anchor="middle">debit+credit+ledger+idempotency-key+outbox-row (atomic, M07–M09)</text>
+  <rect x="48" y="146" width="324" height="40" rx="6" fill="#2d2150" stroke="#8957e5"/>
+  <text x="210" y="163" fill="#e7d6ff" font-size="9.5" text-anchor="middle">cross-shard minority → SAGA (12.8) + idempotency (12.9)</text>
+  <text x="210" y="177" fill="#cdb4ff" font-size="9" text-anchor="middle">local txns + compensations + durable state · never 2PC/XA</text>
+  <text x="210" y="202" fill="#8b98a5" font-size="9" text-anchor="middle">reads: authorize → primary (strong) · own history → read-your-writes (M10/10.6)</text>
+
+  <!-- propagation -->
+  <rect x="410" y="62" width="360" height="150" rx="10" fill="#11161c" stroke="#1f6feb" stroke-width="1.5"/>
+  <text x="590" y="84" fill="#9fd0ff" font-size="12" font-weight="700" text-anchor="middle">PROPAGATION — eventual + idempotent</text>
+  <rect x="428" y="96" width="324" height="34" rx="6" fill="#1b3a5c" stroke="#2f6db5"/>
+  <text x="590" y="113" fill="#cde3ff" font-size="9.5" text-anchor="middle">OUTBOX event (atomic with state, 12.11) — never lost</text>
+  <text x="590" y="125" fill="#9fd0ff" font-size="8.5" text-anchor="middle">→ no dual-write (12.10)</text>
+  <rect x="428" y="136" width="324" height="34" rx="6" fill="#11161c" stroke="#8957e5"/>
+  <text x="590" y="153" fill="#d2a8ff" font-size="9.5" text-anchor="middle">CDC binlog → Kafka (12.12) → idempotent consumers (12.13)</text>
+  <text x="590" y="165" fill="#cdb4ff" font-size="8.5" text-anchor="middle">= exactly-once EFFECT</text>
+  <text x="590" y="190" fill="#a8e6c2" font-size="9" text-anchor="middle">→ fraud · notifications · search · reporting warehouse</text>
+  <text x="590" y="204" fill="#8b98a5" font-size="9" text-anchor="middle">reporting/display → async replicas (eventual, M10/10.5)</text>
+
+  <!-- per-shard replicated -->
+  <rect x="30" y="226" width="740" height="76" rx="10" fill="#11161c" stroke="#d29922" stroke-width="1.3"/>
+  <text x="400" y="248" fill="#f0c674" font-size="11.5" font-weight="700" text-anchor="middle">substrate: each shard (M11) is itself REPLICATED (M10)</text>
+  <text x="400" y="270" fill="#f5e6c7" font-size="9.5" text-anchor="middle">semi-sync (node-loss durable, M10/10.4/9.16) · primary reads (strong) · async replicas (eventual reporting)</text>
+  <text x="400" y="288" fill="#8b98a5" font-size="9.5" text-anchor="middle">CP under partition for money ops (group replication quorum + fencing, M10/10.11) · single-node ACID within (M07–M09)</text>
+
+  <!-- reconciliation backstop -->
+  <rect x="30" y="316" width="740" height="68" rx="10" fill="#11161c" stroke="#8957e5" stroke-width="1.5"/>
+  <text x="400" y="338" fill="#d2a8ff" font-size="12" font-weight="700" text-anchor="middle">THE BACKSTOP — reconciliation (12.14, M02/2.17)</text>
+  <text x="400" y="358" fill="#e7d6ff" font-size="9.5" text-anchor="middle">independently re-derive balances from the immutable ledger · match external processor records · daily</text>
+  <text x="400" y="376" fill="#a8e6c2" font-size="9.5" text-anchor="middle">→ detects/repairs ANY residual drift (a half-completed Saga, a missed event, a bug) — the money-never-lies safety net</text>
+
+  <!-- bottom guarantee -->
+  <rect x="30" y="398" width="740" height="70" rx="10" fill="#0d1b12" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="400" y="420" fill="#7ee2a8" font-size="11.5" font-weight="700" text-anchor="middle">money-never-lies across the WHOLE distribution: a payment is</text>
+  <text x="400" y="440" fill="#a8e6c2" font-size="9.5" text-anchor="middle">ATOMIC (single-shard ACID / compensated Saga) · DURABLE beyond node loss (semi-sync) · never DOUBLE-applied (idempotency)</text>
+  <text x="400" y="458" fill="#a8e6c2" font-size="9.5" text-anchor="middle">· never LOST in propagation (outbox+CDC) · exactly-once in EFFECT (idempotent consumers) · independently VERIFIED (reconciliation)</text>
+</svg>

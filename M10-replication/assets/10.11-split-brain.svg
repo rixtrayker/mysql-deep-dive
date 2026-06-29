@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="440" fill="#0f1419"/>
+  <text x="400" y="28" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">10.11 · Split-brain — two sources diverge irreconcilably</text>
+  <text x="400" y="48" fill="#8b98a5" font-size="12" text-anchor="middle">the WORST replication failure: the ledger FORKS · prevention (fence / quorum) is the only good answer</text>
+
+  <!-- the split-brain -->
+  <text x="200" y="84" fill="#ff7b72" font-size="13" font-weight="700" text-anchor="middle">✗ SPLIT-BRAIN</text>
+  <text x="200" y="102" fill="#f5c2c0" font-size="10.5" text-anchor="middle">network partition OR botched failover (no fence)</text>
+
+  <rect x="40" y="116" width="150" height="50" rx="6" fill="#1b3a5c" stroke="#2f6db5"/>
+  <text x="115" y="136" fill="#cde3ff" font-size="11" font-weight="600" text-anchor="middle">SOURCE A (old)</text>
+  <text x="115" y="153" fill="#9fd0ff" font-size="10" text-anchor="middle">NOT actually dead!</text>
+  <rect x="230" y="116" width="150" height="50" rx="6" fill="#2d2150" stroke="#8957e5"/>
+  <text x="305" y="136" fill="#e7d6ff" font-size="11" font-weight="600" text-anchor="middle">SOURCE B (promoted)</text>
+  <text x="305" y="153" fill="#cdb4ff" font-size="10" text-anchor="middle">also taking writes</text>
+
+  <path d="M115,166 L115,196" stroke="#da3633" stroke-width="1.5" fill="none" marker-end="url(#r)"/>
+  <path d="M305,166 L305,196" stroke="#da3633" stroke-width="1.5" fill="none" marker-end="url(#r)"/>
+  <defs><marker id="r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#da3633"/></marker></defs>
+
+  <rect x="40" y="200" width="150" height="64" rx="6" fill="#3a1a1a" stroke="#da3633"/>
+  <text x="115" y="220" fill="#ff7b72" font-size="10.5" text-anchor="middle">accepts: transfer X</text>
+  <text x="115" y="237" fill="#f5c2c0" font-size="10" text-anchor="middle">(GTID A:501)</text>
+  <text x="115" y="255" fill="#f5c2c0" font-size="9.5" text-anchor="middle">doesn't have Y</text>
+  <rect x="230" y="200" width="150" height="64" rx="6" fill="#3a1a1a" stroke="#da3633"/>
+  <text x="305" y="220" fill="#ff7b72" font-size="10.5" text-anchor="middle">accepts: transfer Y</text>
+  <text x="305" y="237" fill="#f5c2c0" font-size="10" text-anchor="middle">(GTID B:501 — errant! 10.12)</text>
+  <text x="305" y="255" fill="#f5c2c0" font-size="9.5" text-anchor="middle">doesn't have X</text>
+
+  <rect x="40" y="278" width="340" height="56" rx="6" fill="#2d1a1a" stroke="#da3633" stroke-width="1.4"/>
+  <text x="210" y="300" fill="#ff7b72" font-size="11.5" font-weight="600" text-anchor="middle">→ the LEDGER FORKS into two conflicting truths</text>
+  <text x="210" y="320" fill="#f5c2c0" font-size="10" text-anchor="middle">both have REAL committed money · no clean merge · barely recoverable (M15)</text>
+
+  <!-- prevention -->
+  <text x="595" y="84" fill="#7ee2a8" font-size="13" font-weight="700" text-anchor="middle">✓ PREVENTION (the only good answer)</text>
+
+  <rect x="420" y="100" width="350" height="74" rx="8" fill="#143a2a" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="435" y="120" fill="#7ee2a8" font-size="12" font-weight="700">FENCING / STONITH</text>
+  <text x="435" y="140" fill="#a8e6c2" font-size="10.5">forcibly kill/isolate the old source BEFORE promoting</text>
+  <text x="435" y="157" fill="#a8e6c2" font-size="10.5">(power mgmt / network ACL) → it CAN'T take writes</text>
+  <text x="435" y="170" fill="#7ee2a8" font-size="10">+ super_read_only=ON on all replicas (10.7)</text>
+
+  <rect x="420" y="182" width="350" height="74" rx="8" fill="#2d2150" stroke="#8957e5" stroke-width="1.5"/>
+  <text x="435" y="202" fill="#d2a8ff" font-size="12" font-weight="700">QUORUM / CONSENSUS (structural)</text>
+  <text x="435" y="222" fill="#cdb4ff" font-size="10.5">Group Replication (10.9): only a MAJORITY can commit</text>
+  <text x="435" y="239" fill="#cdb4ff" font-size="10.5">→ a partitioned minority CAN'T accept writes</text>
+  <text x="435" y="252" fill="#d2a8ff" font-size="10">→ split-brain IMPOSSIBLE by design</text>
+
+  <rect x="420" y="264" width="350" height="70" rx="8" fill="#11243a" stroke="#1f6feb"/>
+  <text x="595" y="284" fill="#9fd0ff" font-size="11" font-weight="600" text-anchor="middle">"exactly one leader" — enforced, never assumed</text>
+  <text x="595" y="304" fill="#cde3ff" font-size="10" text-anchor="middle">why consensus algorithms exist (safe leader election</text>
+  <text x="595" y="320" fill="#cde3ff" font-size="10" text-anchor="middle">despite partitions); why "fence before promote" is sacred</text>
+
+  <!-- footer -->
+  <rect x="40" y="350" width="730" height="70" rx="8" fill="#11161c" stroke="#30363d"/>
+  <text x="400" y="372" fill="#e6edf3" font-size="12" font-weight="700" text-anchor="middle">split-brain &gt; the outage you were avoiding — corrupted forked ledger vs a temporary inability to write</text>
+  <text x="55" y="396" fill="#ff7b72" font-size="11">● CAP (M12): during a partition you MUST refuse writes on the minority side to preserve consistency (no split-brain)</text>
+  <text x="55" y="414" fill="#f0c674" font-size="11">● for money: NEVER fail over without fencing or consensus — split-brain is an unrecoverable money-never-lies catastrophe (M15)</text>
+</svg>

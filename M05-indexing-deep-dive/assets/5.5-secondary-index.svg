@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 380" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="760" height="380" fill="#0f1419"/>
+  <text x="380" y="28" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">5.5 · Secondary index — the double lookup</text>
+  <text x="380" y="48" fill="#8b98a5" font-size="12" text-anchor="middle">secondary leaf holds (indexed cols + PK) → second hop into the clustered index fetches the row</text>
+
+  <!-- secondary index B+Tree -->
+  <rect x="40" y="80" width="320" height="250" rx="10" fill="#11161c" stroke="#8957e5" stroke-width="1.5"/>
+  <text x="200" y="102" fill="#d2a8ff" text-anchor="middle" font-weight="600">SECONDARY INDEX  (status_code)</text>
+  <rect x="120" y="118" width="160" height="32" rx="6" fill="#2d2150" stroke="#8957e5"/>
+  <text x="200" y="139" fill="#d2a8ff" text-anchor="middle" font-size="11">index root</text>
+  <rect x="60" y="180" width="130" height="130" rx="6" fill="#1f1838" stroke="#6e40c9"/>
+  <text x="125" y="200" fill="#d2a8ff" text-anchor="middle" font-size="11">LEAF</text>
+  <text x="125" y="224" fill="#e7d6ff" text-anchor="middle" font-size="11">status=1 → PK 42</text>
+  <text x="125" y="246" fill="#e7d6ff" text-anchor="middle" font-size="11">status=1 → PK 43</text>
+  <text x="125" y="268" fill="#e7d6ff" text-anchor="middle" font-size="11">status=1 → PK 50</text>
+  <text x="125" y="296" fill="#b78bff" text-anchor="middle" font-size="10">leaf stores PK, not the row</text>
+  <rect x="210" y="180" width="130" height="130" rx="6" fill="#1f1838" stroke="#6e40c9"/>
+  <text x="275" y="200" fill="#d2a8ff" text-anchor="middle" font-size="11">LEAF</text>
+  <text x="275" y="226" fill="#e7d6ff" text-anchor="middle" font-size="11">status=2 → PK 47</text>
+  <text x="275" y="248" fill="#e7d6ff" text-anchor="middle" font-size="11">status=2 → PK 51</text>
+  <path d="M180,150 L125,180" stroke="#6e40c9" stroke-width="1.2" fill="none"/>
+  <path d="M220,150 L275,180" stroke="#6e40c9" stroke-width="1.2" fill="none"/>
+
+  <text x="200" y="350" fill="#d2a8ff" text-anchor="middle" font-size="11" font-weight="600">STEP 1 · find key → get PK</text>
+
+  <!-- arrow to clustered -->
+  <path d="M365,225 L405,225" stroke="#d29922" stroke-width="2.5" fill="none" marker-end="url(#a5)"/>
+  <text x="385" y="216" fill="#f0c674" text-anchor="middle" font-size="10">PK 42</text>
+  <defs><marker id="a5" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#d29922"/></marker></defs>
+
+  <!-- clustered index -->
+  <rect x="410" y="80" width="320" height="250" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="570" y="102" fill="#7ee2a8" text-anchor="middle" font-weight="600">CLUSTERED INDEX  (PK)</text>
+  <rect x="490" y="118" width="160" height="32" rx="6" fill="#13361f" stroke="#2ea043"/>
+  <text x="570" y="139" fill="#7ee2a8" text-anchor="middle" font-size="11">PK root</text>
+  <rect x="450" y="180" width="240" height="130" rx="6" fill="#143a2a" stroke="#2ea043"/>
+  <text x="570" y="200" fill="#7ee2a8" text-anchor="middle" font-size="11">LEAF = full rows</text>
+  <rect x="462" y="212" width="216" height="26" rx="4" fill="#3a2a14" stroke="#d29922" stroke-width="1.5"/>
+  <text x="570" y="230" fill="#f5e6c7" text-anchor="middle" font-size="11">PK 42 │ full row fetched ✓</text>
+  <text x="570" y="258" fill="#c7f5d9" text-anchor="middle" font-size="11">PK 43 │ … full row …</text>
+  <text x="570" y="280" fill="#c7f5d9" text-anchor="middle" font-size="11">PK 47 │ … full row …</text>
+  <path d="M550,150 L570,180" stroke="#2ea043" stroke-width="1.2" fill="none"/>
+  <text x="570" y="350" fill="#7ee2a8" text-anchor="middle" font-size="11" font-weight="600">STEP 2 · descend PK tree → fetch row</text>
+
+  <!-- footnote -->
+  <text x="380" y="372" fill="#f0c674" text-anchor="middle" font-size="10.5">⚠ extra hop per row · PK stored in every secondary index (fat PK bloats all) · covering index (5.6) eliminates STEP 2</text>
+</svg>

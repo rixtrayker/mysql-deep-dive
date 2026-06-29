@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="360" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">15.10 · The backup that won't restore — the catastrophe REALIZED</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">M13/13.5's warning, realized: data gone AND recovery gone · entirely preventable by tested restores</text>
+
+  <!-- the year -->
+  <rect x="20" y="62" width="760" height="50" rx="9" fill="#11161c" stroke="#d29922" stroke-width="1.3"/>
+  <text x="400" y="82" fill="#f0c674" font-size="11" font-weight="700" text-anchor="middle">"backup SUCCEEDED" ✓ every night for a year — based on "did it RUN", NOT "can it RESTORE"</text>
+  <text x="400" y="100" fill="#f5e6c7" font-size="9.5" text-anchor="middle">so silent failures accumulate UNDETECTED → discovered only when you try to restore (during the disaster)</text>
+
+  <!-- the disaster -->
+  <rect x="20" y="124" width="370" height="120" rx="9" fill="#11161c" stroke="#da3633" stroke-width="1.6"/>
+  <text x="205" y="144" fill="#ff7b72" font-size="11" font-weight="700" text-anchor="middle">DISASTER → you go to restore → it DOESN'T WORK</text>
+  <text x="35" y="164" fill="#f5b7b3" font-size="9">✗ CORRUPT (silent bit-rot, a backup-process bug)</text>
+  <text x="35" y="182" fill="#f5b7b3" font-size="9">✗ INCOMPLETE (a table silently excluded)</text>
+  <text x="35" y="200" fill="#f5b7b3" font-size="9">✗ UN-DECRYPTABLE (the key was lost/rotated, 13.14)</text>
+  <text x="35" y="218" fill="#f5b7b3" font-size="9">✗ MISSING the binlog (no PITR, 15.7)</text>
+  <text x="35" y="236" fill="#ff7b72" font-size="9.5" font-weight="700">→ data gone AND recovery gone</text>
+
+  <!-- prevention -->
+  <rect x="410" y="124" width="370" height="120" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.6"/>
+  <text x="595" y="144" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">PREVENTION (the only one): TESTED RESTORES (M13/13.5)</text>
+  <text x="425" y="164" fill="#a8e6c2" font-size="9">automated restore DRILLS → scratch instance</text>
+  <text x="425" y="182" fill="#a8e6c2" font-size="9">→ apply PITR → VERIFY (checksums + reconciliation)</text>
+  <text x="425" y="200" fill="#a8e6c2" font-size="9">→ catches EVERY silent failure BEFORE the disaster</text>
+  <text x="425" y="218" fill="#a8e6c2" font-size="9">+ multiple backup types · off-site · key management</text>
+  <text x="425" y="236" fill="#7ee2a8" font-size="9.5" font-weight="700">"you don't have backups, you have RESTORES"</text>
+
+  <rect x="20" y="256" width="760" height="44" rx="9" fill="#11161c" stroke="#8957e5" stroke-width="1.3"/>
+  <text x="400" y="276" fill="#d2a8ff" font-size="10.5" font-weight="700" text-anchor="middle">mid-disaster recovery (damage limitation): try other backups / a replica / a logical dump · salvage (force_recovery, 15.6)</text>
+  <text x="400" y="294" fill="#e7d6ff" font-size="9.5" text-anchor="middle">· reconstruct from external processor records (M12/12.14) — there's NO clean recovery, which is the point</text>
+
+  <rect x="20" y="310" width="760" height="42" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="400" y="330" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">💰 VERDICT: money PERMANENTLY LOST — the operational catastrophe, ENTIRELY preventable by tested restores</text>
+  <text x="400" y="348" fill="#a8e6c2" font-size="9.5" text-anchor="middle">"backup succeeded" ≠ "restore works" — test it, or discover during the disaster that you have neither · THE M13/13.5 cautionary tale</text>
+</svg>

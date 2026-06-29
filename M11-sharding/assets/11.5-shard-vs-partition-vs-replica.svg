@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 430" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="430" fill="#0f1419"/>
+  <text x="400" y="28" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">11.5 · Replication vs Partitioning vs Sharding — three different tools</text>
+  <text x="400" y="48" fill="#8b98a5" font-size="12" text-anchor="middle">copies (read scale) · split-within-one-box (manageability) · split-across-boxes (write scale)</text>
+
+  <!-- REPLICATION -->
+  <rect x="20" y="66" width="245" height="330" rx="10" fill="#11161c" stroke="#8957e5" stroke-width="1.4"/>
+  <text x="142" y="88" fill="#d2a8ff" font-size="12.5" font-weight="700" text-anchor="middle">REPLICATION (M10)</text>
+  <text x="142" y="106" fill="#8b98a5" font-size="10" text-anchor="middle">same data, copied</text>
+  <rect x="95" y="120" width="94" height="30" rx="6" fill="#1b3a5c" stroke="#2f6db5"/><text x="142" y="139" fill="#cde3ff" font-size="9.5" text-anchor="middle">SOURCE · rows 1–9</text>
+  <rect x="40" y="186" width="94" height="28" rx="6" fill="#2d2150" stroke="#8957e5"/><text x="87" y="204" fill="#d2a8ff" font-size="9" text-anchor="middle">replica · 1–9</text>
+  <rect x="150" y="186" width="94" height="28" rx="6" fill="#2d2150" stroke="#8957e5"/><text x="197" y="204" fill="#d2a8ff" font-size="9" text-anchor="middle">replica · 1–9</text>
+  <path d="M120,150 L90,184" stroke="#8957e5" stroke-width="1.3" fill="none"/>
+  <path d="M164,150 L194,184" stroke="#8957e5" stroke-width="1.3" fill="none"/>
+  <text x="142" y="246" fill="#7ee2a8" font-size="10" text-anchor="middle">✓ scales READS</text>
+  <text x="142" y="264" fill="#7ee2a8" font-size="10" text-anchor="middle">✓ HA / failover</text>
+  <text x="142" y="282" fill="#ff7b72" font-size="10" text-anchor="middle">✗ writes NOT scaled</text>
+  <text x="142" y="300" fill="#8b98a5" font-size="9" text-anchor="middle">(each replica applies</text>
+  <text x="142" y="313" fill="#8b98a5" font-size="9" text-anchor="middle">EVERY write)</text>
+  <text x="142" y="345" fill="#cdb4ff" font-size="9.5" text-anchor="middle">every node = whole dataset</text>
+  <text x="142" y="372" fill="#8b98a5" font-size="9" text-anchor="middle">cost: lag / staleness</text>
+
+  <!-- PARTITIONING -->
+  <rect x="278" y="66" width="245" height="330" rx="10" fill="#11161c" stroke="#d29922" stroke-width="1.4"/>
+  <text x="400" y="88" fill="#f0c674" font-size="12.5" font-weight="700" text-anchor="middle">PARTITIONING (11.2)</text>
+  <text x="400" y="106" fill="#8b98a5" font-size="10" text-anchor="middle">one table split · ONE server</text>
+  <rect x="305" y="122" width="190" height="92" rx="8" fill="#241c08" stroke="#d29922" stroke-dasharray="3 2"/>
+  <text x="400" y="138" fill="#f5e6c7" font-size="9" text-anchor="middle">single server</text>
+  <rect x="318" y="146" width="78" height="24" rx="4" fill="#3a2e0a" stroke="#d29922"/><text x="357" y="162" fill="#f0c674" font-size="9" text-anchor="middle">Jan part.</text>
+  <rect x="404" y="146" width="78" height="24" rx="4" fill="#3a2e0a" stroke="#d29922"/><text x="443" y="162" fill="#f0c674" font-size="9" text-anchor="middle">Feb part.</text>
+  <rect x="318" y="178" width="78" height="24" rx="4" fill="#3a2e0a" stroke="#d29922"/><text x="357" y="194" fill="#f0c674" font-size="9" text-anchor="middle">Mar part.</text>
+  <rect x="404" y="178" width="78" height="24" rx="4" fill="#3a2e0a" stroke="#d29922"/><text x="443" y="194" fill="#f0c674" font-size="9" text-anchor="middle">Apr part.</text>
+  <text x="400" y="246" fill="#7ee2a8" font-size="10" text-anchor="middle">✓ retention (DROP part.)</text>
+  <text x="400" y="264" fill="#7ee2a8" font-size="10" text-anchor="middle">✓ range pruning</text>
+  <text x="400" y="282" fill="#ff7b72" font-size="10" text-anchor="middle">✗ NO write scaling</text>
+  <text x="400" y="300" fill="#8b98a5" font-size="9" text-anchor="middle">(still one box: one disk,</text>
+  <text x="400" y="313" fill="#8b98a5" font-size="9" text-anchor="middle">redo log, buffer pool)</text>
+  <text x="400" y="345" fill="#f5e6c7" font-size="9.5" text-anchor="middle">manageability tool, not scale</text>
+  <text x="400" y="372" fill="#8b98a5" font-size="9" text-anchor="middle">limits: uniq-key rule, no FK</text>
+
+  <!-- SHARDING -->
+  <rect x="536" y="66" width="245" height="330" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="1.6"/>
+  <text x="658" y="88" fill="#7ee2a8" font-size="12.5" font-weight="700" text-anchor="middle">SHARDING (11.5)</text>
+  <text x="658" y="106" fill="#8b98a5" font-size="10" text-anchor="middle">data split · MANY servers</text>
+  <rect x="556" y="122" width="90" height="46" rx="6" fill="#13361f" stroke="#2ea043"/><text x="601" y="140" fill="#7ee2a8" font-size="9" text-anchor="middle">SHARD 1</text><text x="601" y="156" fill="#a8e6c2" font-size="8.5" text-anchor="middle">rows 1–3</text>
+  <rect x="670" y="122" width="90" height="46" rx="6" fill="#13361f" stroke="#2ea043"/><text x="715" y="140" fill="#7ee2a8" font-size="9" text-anchor="middle">SHARD 2</text><text x="715" y="156" fill="#a8e6c2" font-size="8.5" text-anchor="middle">rows 4–6</text>
+  <rect x="613" y="178" width="90" height="46" rx="6" fill="#13361f" stroke="#2ea043"/><text x="658" y="196" fill="#7ee2a8" font-size="9" text-anchor="middle">SHARD 3</text><text x="658" y="212" fill="#a8e6c2" font-size="8.5" text-anchor="middle">rows 7–9</text>
+  <text x="658" y="252" fill="#7ee2a8" font-size="10" text-anchor="middle">✓ scales WRITES + storage</text>
+  <text x="658" y="270" fill="#7ee2a8" font-size="10" text-anchor="middle">✓ ~1/N load each</text>
+  <text x="658" y="288" fill="#ff7b72" font-size="10" text-anchor="middle">✗ no cross-shard ACID</text>
+  <text x="658" y="306" fill="#ff7b72" font-size="10" text-anchor="middle">✗ scatter-gather queries</text>
+  <text x="658" y="324" fill="#ff7b72" font-size="10" text-anchor="middle">✗ resharding is brutal</text>
+  <text x="658" y="352" fill="#a8e6c2" font-size="9.5" text-anchor="middle">each node = a SLICE</text>
+  <text x="658" y="378" fill="#8b98a5" font-size="9" text-anchor="middle">one-way door · shard LAST</text>
+
+  <text x="400" y="418" fill="#8b98a5" font-size="10.5" text-anchor="middle">replication DUPLICATES (reads add up) · sharding DIVIDES (capacity adds up) · they COMPOSE: shard × replicate-each-shard</text>
+</svg>

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="380" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">16.1 · The fintech design frame — derive everything from the invariants</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">start from money-never-lies → model the ledger → correct → scale → operable → survivable (composing M01–M15)</text>
+
+  <!-- invariants -->
+  <rect x="20" y="62" width="760" height="52" rx="10" fill="#0d1b12" stroke="#2ea043" stroke-width="1.8"/>
+  <text x="400" y="82" fill="#7ee2a8" font-size="12" font-weight="700" text-anchor="middle">① START FROM THE INVARIANTS (money-never-lies) — derive the design from these, not the other way around</text>
+  <text x="400" y="102" fill="#a8e6c2" font-size="9.5" text-anchor="middle">money CONSERVED (Σ debits=credits) · never LOST/DUPLICATED · always PROVABLE (auditable) · always RECOVERABLE</text>
+
+  <!-- the layers -->
+  <rect x="20" y="124" width="148" height="86" rx="9" fill="#11161c" stroke="#1f6feb" stroke-width="1.3"/>
+  <text x="94" y="144" fill="#9fd0ff" font-size="10" font-weight="700" text-anchor="middle">② LEDGER</text>
+  <text x="94" y="162" fill="#cde3ff" font-size="8.5" text-anchor="middle">immutable double-entry</text>
+  <text x="94" y="176" fill="#cde3ff" font-size="8.5" text-anchor="middle">derived balances (16.2)</text>
+  <text x="94" y="194" fill="#8b98a5" font-size="8" text-anchor="middle">M01/M02/M03</text>
+
+  <rect x="176" y="124" width="148" height="86" rx="9" fill="#11161c" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="250" y="144" fill="#7ee2a8" font-size="10" font-weight="700" text-anchor="middle">③ CORRECT</text>
+  <text x="250" y="162" fill="#a8e6c2" font-size="8.5" text-anchor="middle">atomic + idempotent</text>
+  <text x="250" y="176" fill="#a8e6c2" font-size="8.5" text-anchor="middle">money movement (16.3/16.4)</text>
+  <text x="250" y="194" fill="#8b98a5" font-size="8" text-anchor="middle">M07/M08/M11/M12</text>
+
+  <rect x="332" y="124" width="148" height="86" rx="9" fill="#11161c" stroke="#d29922" stroke-width="1.3"/>
+  <text x="406" y="144" fill="#f0c674" font-size="10" font-weight="700" text-anchor="middle">④ SCALE</text>
+  <text x="406" y="162" fill="#f5e6c7" font-size="8.5" text-anchor="middle">replicas + shards +</text>
+  <text x="406" y="176" fill="#f5e6c7" font-size="8.5" text-anchor="middle">analytics offload (16.10)</text>
+  <text x="406" y="194" fill="#8b98a5" font-size="8" text-anchor="middle">M10/M11/M02</text>
+
+  <rect x="488" y="124" width="148" height="86" rx="9" fill="#11161c" stroke="#8957e5" stroke-width="1.3"/>
+  <text x="562" y="144" fill="#d2a8ff" font-size="10" font-weight="700" text-anchor="middle">⑤ OPERABLE</text>
+  <text x="562" y="162" fill="#e7d6ff" font-size="8.5" text-anchor="middle">backup/PITR, monitor,</text>
+  <text x="562" y="176" fill="#e7d6ff" font-size="8.5" text-anchor="middle">online DDL, security</text>
+  <text x="562" y="194" fill="#8b98a5" font-size="8" text-anchor="middle">M13</text>
+
+  <rect x="644" y="124" width="136" height="86" rx="9" fill="#11161c" stroke="#da3633" stroke-width="1.3"/>
+  <text x="712" y="144" fill="#ff7b72" font-size="10" font-weight="700" text-anchor="middle">⑥ SURVIVABLE</text>
+  <text x="712" y="162" fill="#f5b7b3" font-size="8.5" text-anchor="middle">prevention checklist</text>
+  <text x="712" y="176" fill="#f5b7b3" font-size="8.5" text-anchor="middle">+ DR (16.11)</text>
+  <text x="712" y="194" fill="#8b98a5" font-size="8" text-anchor="middle">M15/M10/M13</text>
+
+  <!-- integrate + reconcile -->
+  <rect x="20" y="222" width="760" height="48" rx="10" fill="#11161c" stroke="#1f6feb" stroke-width="1.3"/>
+  <text x="400" y="242" fill="#9fd0ff" font-size="11" font-weight="700" text-anchor="middle">⑦ INTEGRATE RELIABLY (outbox/CDC, M12, 16.12) + RECONCILE (the backstop, M12/12.14, 16.7) — woven through ALL layers</text>
+  <text x="400" y="260" fill="#cde3ff" font-size="9.5" text-anchor="middle">build CORRECTNESS before scale; weave SURVIVABILITY + reconciliation throughout</text>
+
+  <rect x="20" y="282" width="760" height="46" rx="9" fill="#11161c" stroke="#d29922" stroke-width="1.2"/>
+  <text x="400" y="302" fill="#f0c674" font-size="10.5" font-weight="700" text-anchor="middle">⑧ NAME THE TRADEOFFS: atomic-single-shard vs Saga · strong vs eventual (per op) · shard-or-not · the DR cost</text>
+  <text x="400" y="320" fill="#f5e6c7" font-size="9.5" text-anchor="middle">don't trade away a money-never-lies invariant for performance — bulletproof the money path, optimize elsewhere</text>
+
+  <rect x="20" y="340" width="760" height="32" rx="8" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="400" y="361" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">💰 the meta-design: derive from the invariants, build correctness first, weave survivability + reconciliation throughout</text>
+</svg>

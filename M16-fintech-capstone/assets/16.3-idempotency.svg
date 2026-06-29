@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="360" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">16.3 · Idempotency for money — exactly-once in effect</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">the load-bearing primitive: every money operation safely retryable · key + effect ATOMIC (M07/M12/12.9)</text>
+
+  <rect x="40" y="64" width="160" height="60" rx="8" fill="#1b3a5c" stroke="#2f6db5"/>
+  <text x="120" y="88" fill="#cde3ff" font-size="10" font-weight="700" text-anchor="middle">CLIENT</text>
+  <text x="120" y="106" fill="#9fd0ff" font-size="9" text-anchor="middle">pay $100, key=K7</text>
+  <text x="120" y="119" fill="#9fd0ff" font-size="8.5" text-anchor="middle">(timeout → retries, SAME key)</text>
+
+  <path d="M200 82 L250 82" stroke="#2ea043" stroke-width="1.5" marker-end="url(#g)"/>
+  <rect x="250" y="62" width="510" height="62" rx="9" fill="#11161c" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="505" y="82" fill="#7ee2a8" font-size="10.5" font-weight="700" text-anchor="middle">FIRST request (K7 new) — ONE atomic txn (M07):</text>
+  <text x="505" y="100" fill="#a8e6c2" font-size="9">INSERT key K7 (UNIQUE) + debit + credit + ledger entries (16.2) → apply once, record result, return it</text>
+  <text x="505" y="116" fill="#8b98a5" font-size="8.5">key + effect atomic → a crash between them can't double-apply</text>
+
+  <path d="M200 162 L250 162" stroke="#d29922" stroke-width="1.5" marker-end="url(#a)"/>
+  <rect x="250" y="142" width="510" height="62" rx="9" fill="#11161c" stroke="#d29922" stroke-width="1.5"/>
+  <text x="505" y="162" fill="#f0c674" font-size="10.5" font-weight="700" text-anchor="middle">RETRY (same K7) — UNIQUE CONSTRAINT fails → "already processed"</text>
+  <text x="505" y="180" fill="#f5e6c7" font-size="9">→ do NOT re-apply · return the RECORDED result → charged exactly ONCE, no double-charge</text>
+  <text x="505" y="196" fill="#8b98a5" font-size="8.5">the database enforces dedup atomically (the unique index)</text>
+
+  <rect x="40" y="224" width="720" height="64" rx="10" fill="#0d1b12" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="400" y="246" fill="#7ee2a8" font-size="11.5" font-weight="700" text-anchor="middle">you can't prevent duplicate DELIVERY (exactly-once delivery is a myth, M12/12.13) — make duplicate PROCESSING harmless</text>
+  <text x="400" y="268" fill="#a8e6c2" font-size="10" text-anchor="middle">at-least-once delivery (never lost) + idempotent processing (duplicates no-op) = exactly-once EFFECT</text>
+  <text x="400" y="284" fill="#8b98a5" font-size="9.5" text-anchor="middle">the primitive under transfers, Saga steps (M12/12.8), CDC consumers (M12/12.13) · non-negotiable for money</text>
+
+  <rect x="40" y="300" width="720" height="44" rx="9" fill="#11161c" stroke="#8957e5" stroke-width="1.2"/>
+  <text x="400" y="322" fill="#d2a8ff" font-size="11" font-weight="700" text-anchor="middle">💰 the single most important money-never-lies protection at the request level — NO double-charge</text>
+  <text x="400" y="338" fill="#e7d6ff" font-size="9.5" text-anchor="middle">+ the atomic ledger (16.2) + reconciliation (16.7) → every payment moves money exactly once, provably</text>
+
+  <defs>
+    <marker id="g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2ea043"/></marker>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#d29922"/></marker>
+  </defs>
+</svg>

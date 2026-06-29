@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="440" fill="#0f1419"/>
+  <text x="400" y="30" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">8.2 · MVCC version chain — readers see a consistent past, no locks</text>
+  <text x="400" y="50" fill="#8b98a5" font-size="12" text-anchor="middle">each row keeps old versions in undo logs · DB_ROLL_PTR links the chain · readers walk it for their snapshot</text>
+
+  <!-- current version (clustered index) -->
+  <rect x="40" y="90" width="220" height="92" rx="8" fill="#143a2a" stroke="#2ea043" stroke-width="1.6"/>
+  <text x="150" y="110" fill="#7ee2a8" font-size="12" font-weight="700" text-anchor="middle">CURRENT (clustered index)</text>
+  <text x="55" y="132" fill="#c7f5d9" font-size="12">account 42 · balance = 200</text>
+  <text x="55" y="150" fill="#a8e6c2" font-size="11">DB_TRX_ID = 30 (T30 wrote it)</text>
+  <text x="55" y="168" fill="#a8e6c2" font-size="11">DB_ROLL_PTR → ▶ undo v2</text>
+
+  <!-- undo version 2 -->
+  <rect x="300" y="90" width="200" height="92" rx="8" fill="#3a2a14" stroke="#d29922" stroke-width="1.4"/>
+  <text x="400" y="110" fill="#f0c674" font-size="12" font-weight="700" text-anchor="middle">UNDO v2</text>
+  <text x="315" y="132" fill="#f5e6c7" font-size="12">balance = 150</text>
+  <text x="315" y="150" fill="#f0c674" font-size="11">DB_TRX_ID = 20 (T20)</text>
+  <text x="315" y="168" fill="#f0c674" font-size="11">DB_ROLL_PTR → ▶ undo v1</text>
+
+  <!-- undo version 1 -->
+  <rect x="540" y="90" width="200" height="92" rx="8" fill="#3a2a14" stroke="#d29922" stroke-width="1.4"/>
+  <text x="640" y="110" fill="#f0c674" font-size="12" font-weight="700" text-anchor="middle">UNDO v1 (oldest)</text>
+  <text x="555" y="132" fill="#f5e6c7" font-size="12">balance = 100</text>
+  <text x="555" y="150" fill="#f0c674" font-size="11">DB_TRX_ID = 10 (T10)</text>
+  <text x="555" y="168" fill="#f0c674" font-size="11">DB_ROLL_PTR → ∅</text>
+
+  <!-- chain arrows -->
+  <path d="M260,136 L300,136" stroke="#58a6ff" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <path d="M500,136 L540,136" stroke="#58a6ff" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <defs><marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+
+  <!-- two readers see different versions -->
+  <rect x="40" y="215" width="340" height="105" rx="8" fill="#11161c" stroke="#1f6feb" stroke-width="1.4"/>
+  <text x="210" y="235" fill="#9fd0ff" font-size="12.5" font-weight="700" text-anchor="middle">Reader A — snapshot taken after T20 committed</text>
+  <text x="55" y="258" fill="#cde3ff" font-size="11">walks chain: CURRENT (T30 not visible) → UNDO v2 (T20 ✓)</text>
+  <text x="55" y="278" fill="#7ee2a8" font-size="12" font-weight="600">→ reads balance = 150 ✓ (no lock, no blocking)</text>
+  <text x="55" y="300" fill="#8b98a5" font-size="10.5">sees a CONSISTENT PAST even while T30 writes the new version</text>
+
+  <rect x="420" y="215" width="340" height="105" rx="8" fill="#11161c" stroke="#8957e5" stroke-width="1.4"/>
+  <text x="590" y="235" fill="#d2a8ff" font-size="12.5" font-weight="700" text-anchor="middle">Reader B — snapshot taken before T20</text>
+  <text x="435" y="258" fill="#e7d6ff" font-size="11">walks: CURRENT ✗ → v2 ✗ → UNDO v1 (T10 ✓)</text>
+  <text x="435" y="278" fill="#7ee2a8" font-size="12" font-weight="600">→ reads balance = 100 ✓</text>
+  <text x="435" y="300" fill="#8b98a5" font-size="10.5">same row, DIFFERENT version — each consistent with its snapshot</text>
+
+  <!-- key takeaways -->
+  <rect x="40" y="338" width="720" height="78" rx="8" fill="#11161c" stroke="#30363d"/>
+  <text x="55" y="360" fill="#7ee2a8" font-size="11.5">● writers create NEW versions (in place) + push old version to undo → never destroy what readers need</text>
+  <text x="55" y="382" fill="#9fd0ff" font-size="11.5">● readers WALK the chain to their snapshot version → no locks, no blocking (readers don't block writers)</text>
+  <text x="55" y="404" fill="#f0c674" font-size="11.5">● cost: long txn pins old versions → history-list bloat / longer chains slow reads (purge = M09). visibility rule = 8.3</text>
+</svg>

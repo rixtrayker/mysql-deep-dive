@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="450" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">14.8 · "I think I lost data" — the money-safe incident runbook</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">CONTAIN → assess → recover → VERIFY → post-mortem · the entry point to M15 · order is sacred for money</text>
+
+  <!-- step 1 contain -->
+  <rect x="30" y="62" width="740" height="62" rx="10" fill="#11161c" stroke="#da3633" stroke-width="1.8"/>
+  <text x="50" y="84" fill="#ff7b72" font-size="12.5" font-weight="700">① CONTAIN FIRST — stop the bleeding (BEFORE you investigate)</text>
+  <text x="50" y="104" fill="#f5b7b3" font-size="9.5">halt the bad deploy/script · FENCE a diverging node (M10/10.11 — never let a split-brain keep writing) · freeze writes to the affected scope</text>
+  <text x="50" y="118" fill="#8b98a5" font-size="9">an ongoing incident gets WORSE while you investigate — containment before diagnosis</text>
+
+  <path d="M400 124 L400 134" stroke="#8b98a5" stroke-width="1.4" marker-end="url(#s)"/>
+
+  <!-- step 2 assess -->
+  <rect x="30" y="136" width="740" height="58" rx="10" fill="#11161c" stroke="#d29922" stroke-width="1.4"/>
+  <text x="50" y="158" fill="#f0c674" font-size="12" font-weight="700">② ASSESS THE BLAST RADIUS</text>
+  <text x="50" y="178" fill="#f5e6c7" font-size="9.5">what / how much / since when / still spreading? · logical error? corruption? failover loss window (M10/10.10)? half-Saga (M12/12.8)?</text>
+  <text x="50" y="190" fill="#8b98a5" font-size="9">QUANTIFY with reconciliation (M12/12.14): balance ≠ Σ entries → exactly which accounts</text>
+
+  <path d="M400 194 L400 204" stroke="#8b98a5" stroke-width="1.4" marker-end="url(#s)"/>
+
+  <!-- step 3 recover (branches → M15) -->
+  <rect x="30" y="206" width="740" height="98" rx="10" fill="#11161c" stroke="#1f6feb" stroke-width="1.4"/>
+  <text x="50" y="228" fill="#9fd0ff" font-size="12" font-weight="700">③ CHOOSE THE RECOVERY PATH (routes to M15)</text>
+  <rect x="48" y="238" width="172" height="56" rx="6" fill="#13361f" stroke="#2ea043"/>
+  <text x="134" y="256" fill="#7ee2a8" font-size="9" text-anchor="middle">logical error (bad DELETE)</text>
+  <text x="134" y="272" fill="#a8e6c2" font-size="8.5" text-anchor="middle">→ PITR to just before</text>
+  <text x="134" y="285" fill="#a8e6c2" font-size="8.5" text-anchor="middle">(M13/13.3) → M15</text>
+  <rect x="228" y="238" width="172" height="56" rx="6" fill="#1b3a5c" stroke="#2f6db5"/>
+  <text x="314" y="256" fill="#cde3ff" font-size="9" text-anchor="middle">node loss</text>
+  <text x="314" y="272" fill="#9fd0ff" font-size="8.5" text-anchor="middle">→ failover (M10/10.10),</text>
+  <text x="314" y="285" fill="#9fd0ff" font-size="8.5" text-anchor="middle">check loss window</text>
+  <rect x="408" y="238" width="172" height="56" rx="6" fill="#3a1410" stroke="#da3633"/>
+  <text x="494" y="256" fill="#ff7b72" font-size="9" text-anchor="middle">corruption</text>
+  <text x="494" y="272" fill="#f5b7b3" font-size="8.5" text-anchor="middle">→ restore+PITR; force_</text>
+  <text x="494" y="285" fill="#f5b7b3" font-size="8.5" text-anchor="middle">recovery last resort → M15</text>
+  <rect x="588" y="238" width="172" height="56" rx="6" fill="#2d2150" stroke="#8957e5"/>
+  <text x="674" y="256" fill="#d2a8ff" font-size="9" text-anchor="middle">distributed (half-Saga,</text>
+  <text x="674" y="272" fill="#e7d6ff" font-size="8.5" text-anchor="middle">dual-write loss)</text>
+  <text x="674" y="285" fill="#e7d6ff" font-size="8.5" text-anchor="middle">→ compensate/reconcile (M12)</text>
+
+  <path d="M400 304 L400 314" stroke="#8b98a5" stroke-width="1.4" marker-end="url(#s)"/>
+
+  <!-- step 4 verify -->
+  <rect x="30" y="316" width="740" height="56" rx="10" fill="#0d1b12" stroke="#2ea043" stroke-width="1.6"/>
+  <text x="50" y="338" fill="#7ee2a8" font-size="12" font-weight="700">④ RECOVER, then VERIFY ★ (non-negotiable for money)</text>
+  <text x="50" y="358" fill="#a8e6c2" font-size="9.5">RECONCILE the recovered data (M12/12.14): balance = Σ entries, internal = external — PROVE correctness, don't assume</text>
+  <text x="50" y="368" fill="#8b98a5" font-size="9">"recovered" without reconciliation is NOT recovered</text>
+
+  <path d="M400 372 L400 382" stroke="#8b98a5" stroke-width="1.4" marker-end="url(#s)"/>
+
+  <!-- step 5 -->
+  <rect x="30" y="384" width="740" height="44" rx="10" fill="#11161c" stroke="#8957e5" stroke-width="1.3"/>
+  <text x="50" y="406" fill="#d2a8ff" font-size="11.5" font-weight="700">⑤ POST-MORTEM</text>
+  <text x="180" y="406" fill="#e7d6ff" font-size="9.5">root cause → prevent recurrence: the early-warning signal (13.11) + the tested restore (13.5) that should've existed</text>
+  <text x="400" y="420" fill="#8b98a5" font-size="9" text-anchor="middle">for money the order is SACRED: contain → assess → recover → VERIFY → prevent</text>
+
+  <defs><marker id="s" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b98a5"/></marker></defs>
+</svg>

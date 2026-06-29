@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 410" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="410" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">16.4 · Money movement — atomic transfer + auth-hold-capture (two-phase)</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">the simple atomic transfer · and the two-phase hold/capture for card/auth flows (pending vs settled money)</text>
+
+  <!-- atomic transfer -->
+  <rect x="20" y="62" width="370" height="150" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="1.6"/>
+  <text x="205" y="84" fill="#7ee2a8" font-size="12" font-weight="700" text-anchor="middle">ATOMIC TRANSFER (the common case)</text>
+  <rect x="40" y="96" width="330" height="92" rx="7" fill="#13361f" stroke="#2ea043"/>
+  <text x="205" y="114" fill="#a8e6c2" font-size="9.5" text-anchor="middle">ONE transaction (M07), co-located single-shard (M11/11.9):</text>
+  <text x="205" y="132" fill="#7ee2a8" font-size="9" text-anchor="middle">debit A · credit B · balanced ledger entries (16.2)</text>
+  <text x="205" y="148" fill="#7ee2a8" font-size="9" text-anchor="middle">+ idempotency key (16.3) + outbox row (16.12)</text>
+  <text x="205" y="166" fill="#a8e6c2" font-size="9" text-anchor="middle">atomic conditional UPDATE (no lost update, M08/M15)</text>
+  <text x="205" y="182" fill="#8b98a5" font-size="8.5" text-anchor="middle">= single-shard ACID · all M07–M09 guarantees</text>
+  <text x="205" y="204" fill="#7ee2a8" font-size="10" font-weight="700" text-anchor="middle">money moved exactly once, atomically</text>
+
+  <!-- auth-hold-capture -->
+  <rect x="410" y="62" width="370" height="150" rx="10" fill="#11161c" stroke="#1f6feb" stroke-width="1.6"/>
+  <text x="595" y="84" fill="#9fd0ff" font-size="12" font-weight="700" text-anchor="middle">AUTH-HOLD-CAPTURE (two-phase, card flows)</text>
+  <rect x="428" y="96" width="334" height="28" rx="5" fill="#3a2e0a" stroke="#d29922"/>
+  <text x="595" y="114" fill="#f0c674" font-size="9.5" text-anchor="middle">① AUTHORIZE → place a HOLD (reserve funds, no move yet)</text>
+  <text x="595" y="140" fill="#cdb4ff" font-size="14" text-anchor="middle">↓</text>
+  <rect x="428" y="146" width="334" height="28" rx="5" fill="#13361f" stroke="#2ea043"/>
+  <text x="595" y="164" fill="#a8e6c2" font-size="9.5" text-anchor="middle">② CAPTURE → settle (write ledger entries, release hold)</text>
+  <text x="595" y="192" fill="#8b98a5" font-size="9" text-anchor="middle">or RELEASE/EXPIRE the hold (funds available again)</text>
+  <text x="595" y="206" fill="#9fd0ff" font-size="9" text-anchor="middle">available balance = settled − Σ active holds</text>
+
+  <!-- cross-shard -->
+  <rect x="20" y="224" width="760" height="50" rx="9" fill="#11161c" stroke="#8957e5" stroke-width="1.3"/>
+  <text x="400" y="245" fill="#d2a8ff" font-size="11" font-weight="700" text-anchor="middle">cross-shard money movement (accounts on different shards) → SAGA (M12/12.8) over local txns + clearing accounts (M11/11.9)</text>
+  <text x="400" y="263" fill="#e7d6ff" font-size="9.5" text-anchor="middle">never fragile 2PC/XA · + idempotency + reconciliation · the rare minority (design to co-locate so most transfers are single-shard)</text>
+
+  <!-- invariants -->
+  <rect x="20" y="286" width="760" height="56" rx="9" fill="#11161c" stroke="#d29922" stroke-width="1.2"/>
+  <text x="400" y="306" fill="#f0c674" font-size="10.5" font-weight="700" text-anchor="middle">the key subtlety: PENDING vs SETTLED money — held funds aren't double-spent (available = settled − holds); every hold captured OR released (no leaks)</text>
+  <text x="400" y="326" fill="#f5e6c7" font-size="9.5" text-anchor="middle">holds have EXPIRATIONS (uncaptured → auto-release) · partial/multiple captures supported · each step atomic + idempotent</text>
+
+  <rect x="20" y="354" width="760" height="44" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="400" y="376" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">💰 every money movement — simple or two-phase, single- or cross-shard — moves money EXACTLY ONCE, atomically, provably</text>
+  <text x="400" y="392" fill="#a8e6c2" font-size="9.5" text-anchor="middle">atomic (no loss) + holds (no double-spend of reserved) + two-phase (pending tracked) + idempotent (no double-move on retry)</text>
+</svg>

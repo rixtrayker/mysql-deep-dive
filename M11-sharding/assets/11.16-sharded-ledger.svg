@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="480" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">11.16 · The sharded ledger — write-scale without losing money</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">shard for co-location (transfer = single-shard ACID) × replicate each shard (M10) × cross-shard via Saga × reporting on replicas</text>
+
+  <!-- app + vitess -->
+  <rect x="320" y="62" width="160" height="32" rx="7" fill="#1b3a5c" stroke="#2f6db5"/><text x="400" y="83" fill="#cde3ff" font-size="10.5" font-weight="700" text-anchor="middle">payments app</text>
+  <rect x="300" y="102" width="200" height="40" rx="8" fill="#11161c" stroke="#1f6feb" stroke-width="1.5"/>
+  <text x="400" y="120" fill="#9fd0ff" font-size="10.5" font-weight="700" text-anchor="middle">Vitess (vtgate)</text>
+  <text x="400" y="135" fill="#cde3ff" font-size="8.5" text-anchor="middle">route by tenant/ledger_group · sequences · reshard</text>
+  <path d="M400 94 L400 100" stroke="#58a6ff" stroke-width="1.4"/>
+
+  <!-- shards, each replicated -->
+  <g>
+    <rect x="30" y="160" width="225" height="150" rx="9" fill="#11161c" stroke="#2ea043" stroke-width="1.4"/>
+    <text x="142" y="180" fill="#7ee2a8" font-size="10.5" font-weight="700" text-anchor="middle">SHARD 1 (tenants A–H)</text>
+    <rect x="48" y="190" width="190" height="40" rx="6" fill="#13361f" stroke="#2ea043"/>
+    <text x="143" y="206" fill="#a8e6c2" font-size="8.5" text-anchor="middle">transfer: debit + credit (one tenant)</text>
+    <text x="143" y="221" fill="#7ee2a8" font-size="9" font-weight="700" text-anchor="middle">= single-shard ACID ✓ (M07–M09)</text>
+    <rect x="48" y="236" width="60" height="22" rx="4" fill="#1b3a5c" stroke="#2f6db5"/><text x="78" y="251" fill="#cde3ff" font-size="8" text-anchor="middle">primary</text>
+    <rect x="116" y="236" width="58" height="22" rx="4" fill="#2d2150" stroke="#8957e5"/><text x="145" y="251" fill="#d2a8ff" font-size="7.5" text-anchor="middle">replica</text>
+    <rect x="180" y="236" width="58" height="22" rx="4" fill="#2d2150" stroke="#8957e5"/><text x="209" y="251" fill="#d2a8ff" font-size="7.5" text-anchor="middle">replica</text>
+    <text x="142" y="276" fill="#a8e6c2" font-size="8" text-anchor="middle">semi-sync (node-loss durable, M10/10.4)</text>
+    <text x="142" y="290" fill="#a8e6c2" font-size="8" text-anchor="middle">+ fenced auto-failover (M10/10.10)</text>
+    <text x="142" y="304" fill="#8b98a5" font-size="8" text-anchor="middle">history partitioned by month (11.2)</text>
+  </g>
+  <g>
+    <rect x="287" y="160" width="225" height="150" rx="9" fill="#11161c" stroke="#2ea043" stroke-width="1.4"/>
+    <text x="400" y="180" fill="#7ee2a8" font-size="10.5" font-weight="700" text-anchor="middle">SHARD 2 (tenants I–P)</text>
+    <rect x="305" y="190" width="190" height="40" rx="6" fill="#13361f" stroke="#2ea043"/>
+    <text x="400" y="206" fill="#a8e6c2" font-size="8.5" text-anchor="middle">IDs: ULID / Snowflake (11.12)</text>
+    <text x="400" y="221" fill="#7ee2a8" font-size="9" font-weight="700" text-anchor="middle">unique across shards · time-ordered</text>
+    <rect x="305" y="236" width="60" height="22" rx="4" fill="#1b3a5c" stroke="#2f6db5"/><text x="335" y="251" fill="#cde3ff" font-size="8" text-anchor="middle">primary</text>
+    <rect x="373" y="236" width="58" height="22" rx="4" fill="#2d2150" stroke="#8957e5"/><text x="402" y="251" fill="#d2a8ff" font-size="7.5" text-anchor="middle">replica</text>
+    <rect x="437" y="236" width="58" height="22" rx="4" fill="#2d2150" stroke="#8957e5"/><text x="466" y="251" fill="#d2a8ff" font-size="7.5" text-anchor="middle">replica</text>
+    <text x="400" y="276" fill="#a8e6c2" font-size="8" text-anchor="middle">reference tables (currencies, types)</text>
+    <text x="400" y="290" fill="#a8e6c2" font-size="8" text-anchor="middle">replicated to EVERY shard (11.9)</text>
+    <text x="400" y="304" fill="#8b98a5" font-size="8" text-anchor="middle">~1/N of writes + storage</text>
+  </g>
+  <g>
+    <rect x="544" y="160" width="225" height="150" rx="9" fill="#11161c" stroke="#2ea043" stroke-width="1.4"/>
+    <text x="656" y="180" fill="#7ee2a8" font-size="10.5" font-weight="700" text-anchor="middle">SHARD 3 (tenants Q–Z)</text>
+    <rect x="562" y="190" width="190" height="40" rx="6" fill="#13361f" stroke="#2ea043"/>
+    <text x="657" y="206" fill="#a8e6c2" font-size="8.5" text-anchor="middle">each shard = full InnoDB node</text>
+    <text x="657" y="221" fill="#7ee2a8" font-size="9" font-weight="700" text-anchor="middle">all of M05/M08/M09 apply locally</text>
+    <rect x="562" y="236" width="60" height="22" rx="4" fill="#1b3a5c" stroke="#2f6db5"/><text x="592" y="251" fill="#cde3ff" font-size="8" text-anchor="middle">primary</text>
+    <rect x="630" y="236" width="58" height="22" rx="4" fill="#2d2150" stroke="#8957e5"/><text x="659" y="251" fill="#d2a8ff" font-size="7.5" text-anchor="middle">replica</text>
+    <rect x="694" y="236" width="58" height="22" rx="4" fill="#2d2150" stroke="#8957e5"/><text x="723" y="251" fill="#d2a8ff" font-size="7.5" text-anchor="middle">replica</text>
+    <text x="657" y="276" fill="#a8e6c2" font-size="8" text-anchor="middle">grows 3→6 shards via live</text>
+    <text x="657" y="290" fill="#a8e6c2" font-size="8" text-anchor="middle">Reshard + VDiff verify (11.14)</text>
+    <text x="657" y="304" fill="#8b98a5" font-size="8" text-anchor="middle">no transfer lost</text>
+  </g>
+
+  <path d="M360 142 L142 158" stroke="#58a6ff" stroke-width="1.2" marker-end="url(#b)"/>
+  <path d="M400 142 L400 158" stroke="#58a6ff" stroke-width="1.2" marker-end="url(#b)"/>
+  <path d="M440 142 L656 158" stroke="#58a6ff" stroke-width="1.2" marker-end="url(#b)"/>
+
+  <!-- cross-shard saga -->
+  <rect x="30" y="324" width="370" height="64" rx="9" fill="#11161c" stroke="#8957e5" stroke-width="1.4"/>
+  <text x="215" y="344" fill="#d2a8ff" font-size="10.5" font-weight="700" text-anchor="middle">cross-tenant transfer (rare) → SAGA (11.11)</text>
+  <text x="215" y="362" fill="#e7d6ff" font-size="8.5" text-anchor="middle">local debit (shard A) → local credit (shard B) → settle</text>
+  <text x="215" y="378" fill="#cdb4ff" font-size="8.5" text-anchor="middle">+ idempotency keys + reconciliation · NEVER fragile 2PC</text>
+
+  <!-- reporting -->
+  <rect x="430" y="324" width="339" height="64" rx="9" fill="#11161c" stroke="#d29922" stroke-width="1.4"/>
+  <text x="599" y="344" fill="#f0c674" font-size="10.5" font-weight="700" text-anchor="middle">cross-cutting reporting / reconciliation</text>
+  <text x="599" y="362" fill="#f5e6c7" font-size="8.5" text-anchor="middle">→ replica-fed read model / warehouse (M02/2.17, M13)</text>
+  <text x="599" y="378" fill="#8b98a5" font-size="8.5" text-anchor="middle">NOT scatter-gather on the live money path (11.10)</text>
+
+  <rect x="30" y="402" width="739" height="62" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="400" y="422" fill="#7ee2a8" font-size="11.5" font-weight="700" text-anchor="middle">money-never-lies, distributed: a committed transfer is</text>
+  <text x="400" y="440" fill="#a8e6c2" font-size="9.5" text-anchor="middle">ATOMIC (single-shard ACID, M07–M09) · DURABLE beyond node loss (semi-sync, M10) · never DOUBLE-applied (idempotency)</text>
+  <text x="400" y="456" fill="#a8e6c2" font-size="9.5" text-anchor="middle">· never LOST cross-shard (Saga + reconciliation) · and writes SCALE (sharding) without forking the ledger → M12, M15, M16</text>
+
+  <defs><marker id="b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker></defs>
+</svg>

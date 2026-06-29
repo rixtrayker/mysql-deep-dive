@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="500" fill="#0f1419"/>
+  <text x="400" y="30" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">7.16 · The atomic transfer — every ACID guarantee + idempotency</text>
+  <text x="400" y="50" fill="#8b98a5" font-size="12" text-anchor="middle">move $100 Alice→Bob: atomic · consistent · isolated · durable · idempotent · short</text>
+
+  <!-- the transaction box -->
+  <rect x="30" y="70" width="500" height="370" rx="10" fill="#11161c" stroke="#2f6db5" stroke-width="1.6"/>
+  <text x="280" y="92" fill="#9fd0ff" font-size="13" font-weight="700" text-anchor="middle">ONE short explicit transaction (7.6)</text>
+
+  <!-- step 1 BEGIN -->
+  <rect x="50" y="104" width="460" height="30" rx="5" fill="#1b3a5c" stroke="#2f6db5"/>
+  <text x="62" y="124" fill="#cde3ff" font-size="12">START TRANSACTION   — boundary around exactly the transfer</text>
+
+  <!-- step 2 idempotency -->
+  <rect x="50" y="142" width="460" height="44" rx="5" fill="#3a2a14" stroke="#d29922" stroke-width="1.5"/>
+  <text x="62" y="161" fill="#f5e6c7" font-size="12">INSERT transaction_(idempotency_key UNIQUE)  (M05/5.17, M16)</text>
+  <text x="62" y="178" fill="#f0c674" font-size="11">→ retry hits duplicate-key → recognized already-processed → NO double-post</text>
+
+  <!-- step 3 entries -->
+  <rect x="50" y="194" width="460" height="58" rx="5" fill="#143a2a" stroke="#2ea043"/>
+  <text x="62" y="213" fill="#c7f5d9" font-size="12">INSERT ledger_entry: −100 (Alice), +100 (Bob)</text>
+  <text x="62" y="230" fill="#7ee2a8" font-size="11">→ SUM over the txn = 0  (double-entry, M01/1.19)</text>
+  <text x="62" y="246" fill="#a8e6c2" font-size="11">→ all-or-nothing inside the txn (Atomicity 7.2) — invariant never half-applied</text>
+
+  <!-- step 4 balances -->
+  <rect x="50" y="260" width="460" height="58" rx="5" fill="#143a2a" stroke="#2ea043"/>
+  <text x="62" y="279" fill="#c7f5d9" font-size="12">UPDATE account SET balance = balance − 100 WHERE id=Alice</text>
+  <text x="62" y="296" fill="#c7f5d9" font-size="12">UPDATE account SET balance = balance + 100 WHERE id=Bob</text>
+  <text x="62" y="312" fill="#7ee2a8" font-size="11">→ ATOMIC increment (not read-then-write) → no lost update (7.11), row locks (M08)</text>
+
+  <!-- step 5 commit -->
+  <rect x="50" y="326" width="460" height="44" rx="5" fill="#13361f" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="62" y="345" fill="#7ee2a8" font-size="12">COMMIT   — atomically visible + DURABLE (redo log fsync, 7.5/M09)</text>
+  <text x="62" y="362" fill="#a8e6c2" font-size="11">→ a crash an instant later cannot lose it</text>
+
+  <!-- retry note -->
+  <rect x="50" y="378" width="460" height="50" rx="5" fill="#2d2150" stroke="#8957e5"/>
+  <text x="62" y="397" fill="#e7d6ff" font-size="12">on deadlock / lock-timeout (M08) → RETRY the whole transaction</text>
+  <text x="62" y="414" fill="#cdb4ff" font-size="11">safe because of idempotency (step 2). External provider call stays OUTSIDE (7.15, M16)</text>
+
+  <!-- right column: the 5 guarantees + invariants -->
+  <rect x="550" y="70" width="220" height="370" rx="10" fill="#11161c" stroke="#30363d"/>
+  <text x="660" y="92" fill="#e6edf3" font-size="13" font-weight="700" text-anchor="middle">the guarantees</text>
+  <text x="565" y="120" fill="#7ee2a8" font-size="11.5">⚛ Atomicity — all-or-nothing (7.2)</text>
+  <text x="565" y="146" fill="#9fd0ff" font-size="11.5">✓ Consistency — SUM=0, balance=</text>
+  <text x="582" y="162" fill="#9fd0ff" font-size="11.5">Σentries (7.3, M02/2.17)</text>
+  <text x="565" y="188" fill="#d2a8ff" font-size="11.5">🔒 Isolation — no lost update on</text>
+  <text x="582" y="204" fill="#d2a8ff" font-size="11.5">a hot account (7.4/7.11)</text>
+  <text x="565" y="230" fill="#f0c674" font-size="11.5">💾 Durability — survives crash</text>
+  <text x="582" y="246" fill="#f0c674" font-size="11.5">post-commit (7.5/M09)</text>
+  <text x="565" y="272" fill="#7ee2a8" font-size="11.5">🔁 Idempotent — retry-safe,</text>
+  <text x="582" y="288" fill="#7ee2a8" font-size="11.5">exactly-once (M16)</text>
+  <rect x="560" y="306" width="200" height="124" rx="6" fill="#143a2a" stroke="#2ea043"/>
+  <text x="660" y="326" fill="#7ee2a8" font-size="11.5" font-weight="600" text-anchor="middle">money-never-lies</text>
+  <text x="570" y="348" fill="#c7f5d9" font-size="10.5">conserved (SUM=0)</text>
+  <text x="570" y="366" fill="#c7f5d9" font-size="10.5">attributed (right accounts)</text>
+  <text x="570" y="384" fill="#c7f5d9" font-size="10.5">never lost (durable + atomic)</text>
+  <text x="570" y="402" fill="#c7f5d9" font-size="10.5">never duplicated (idempotent)</text>
+  <text x="570" y="420" fill="#a8e6c2" font-size="10.5">under concurrency AND crashes</text>
+
+  <text x="400" y="462" fill="#8b98a5" font-size="11" text-anchor="middle">DECIMAL/minor units for exact sums (M03/3.4) · money tables = InnoDB (M04/4.12) · keep debit+credit on one shard (M11/M16)</text>
+  <text x="400" y="482" fill="#58a6ff" font-size="11.5" text-anchor="middle" font-weight="600">→ M08 analyzes this under lock contention · M09 makes it durable · M16 scales it across shards</text>
+</svg>

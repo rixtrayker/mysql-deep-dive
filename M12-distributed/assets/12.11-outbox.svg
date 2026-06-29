@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="400" fill="#0f1419"/>
+  <text x="400" y="28" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">12.11 · The outbox pattern — event atomic with the state change, then relay</text>
+  <text x="400" y="48" fill="#8b98a5" font-size="12" text-anchor="middle">fixes dual-write (12.10): one atomic txn writes state + outbox row → a relay/CDC publishes reliably → event can't be lost</text>
+
+  <!-- the atomic transaction -->
+  <rect x="50" y="72" width="320" height="170" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="1.8"/>
+  <text x="210" y="94" fill="#7ee2a8" font-size="12" font-weight="700" text-anchor="middle">ONE InnoDB transaction (atomic, M07)</text>
+  <rect x="72" y="106" width="276" height="28" rx="5" fill="#13361f" stroke="#2ea043"/><text x="210" y="124" fill="#a8e6c2" font-size="9.5" text-anchor="middle">debit A · credit B (the transfer)</text>
+  <rect x="72" y="140" width="276" height="28" rx="5" fill="#13361f" stroke="#2ea043"/><text x="210" y="158" fill="#a8e6c2" font-size="9.5" text-anchor="middle">INSERT ledger entries</text>
+  <rect x="72" y="174" width="276" height="34" rx="5" fill="#1b3a5c" stroke="#2f6db5" stroke-width="1.4"/><text x="210" y="190" fill="#cde3ff" font-size="9.5" text-anchor="middle">INSERT outbox row:</text><text x="210" y="203" fill="#9fd0ff" font-size="9" text-anchor="middle">"TransferCompleted" {payload, event_id}</text>
+  <text x="210" y="228" fill="#7ee2a8" font-size="10" font-weight="700" text-anchor="middle">COMMIT → state + event commit TOGETHER ✓</text>
+
+  <!-- arrow to relay -->
+  <path d="M370 175 L430 175" stroke="#8957e5" stroke-width="1.6" marker-end="url(#p)"/>
+  <text x="400" y="166" fill="#cdb4ff" font-size="8.5" text-anchor="middle">reads</text>
+
+  <!-- relay -->
+  <rect x="430" y="120" width="150" height="60" rx="9" fill="#11161c" stroke="#8957e5" stroke-width="1.5"/>
+  <text x="505" y="142" fill="#d2a8ff" font-size="10.5" font-weight="700" text-anchor="middle">RELAY</text>
+  <text x="505" y="160" fill="#e7d6ff" font-size="8.5" text-anchor="middle">poll outbox, OR</text>
+  <text x="505" y="173" fill="#e7d6ff" font-size="8.5" text-anchor="middle">CDC the binlog (12.12)</text>
+
+  <path d="M580 150 L640 150" stroke="#8957e5" stroke-width="1.6" marker-end="url(#p)"/>
+
+  <!-- kafka -->
+  <rect x="640" y="120" width="120" height="60" rx="9" fill="#11161c" stroke="#1f6feb" stroke-width="1.4"/>
+  <text x="700" y="146" fill="#9fd0ff" font-size="10.5" font-weight="700" text-anchor="middle">Kafka</text>
+  <text x="700" y="164" fill="#cde3ff" font-size="8.5" text-anchor="middle">→ consumers</text>
+
+  <!-- guarantees -->
+  <rect x="50" y="258" width="710" height="118" rx="10" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="405" y="280" fill="#7ee2a8" font-size="11.5" font-weight="700" text-anchor="middle">because the event is in the SAME atomic commit as the state change:</text>
+  <text x="405" y="302" fill="#a8e6c2" font-size="10" text-anchor="middle">✓ can't be LOST (if the transfer committed, the outbox row committed too)</text>
+  <text x="405" y="320" fill="#a8e6c2" font-size="10" text-anchor="middle">✓ can't be a PHANTOM (if the txn rolled back, neither exists)</text>
+  <text x="405" y="338" fill="#f0c674" font-size="10" text-anchor="middle">relay is AT-LEAST-ONCE (may republish on restart) → consumers must be IDEMPOTENT (12.9/12.13) = exactly-once effect</text>
+  <text x="405" y="360" fill="#8b98a5" font-size="9.5" text-anchor="middle">principle: one atomic write = source of truth; the event is reliably DERIVED from it · no XA, no dual-write</text>
+
+  <defs><marker id="p" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8957e5"/></marker></defs>
+</svg>

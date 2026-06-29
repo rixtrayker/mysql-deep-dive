@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 410" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="410" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">15.5 · Silent corruption — data turns WRONG with NO error</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">the silent catastrophe: a balance is just wrong, and you act on it as truth · checksums detect, doublewrite prevents (M09)</text>
+
+  <!-- three sources -->
+  <rect x="20" y="62" width="245" height="120" rx="9" fill="#11161c" stroke="#da3633" stroke-width="1.4"/>
+  <text x="142" y="84" fill="#ff7b72" font-size="11.5" font-weight="700" text-anchor="middle">BIT ROT</text>
+  <text x="142" y="106" fill="#f5b7b3" font-size="9.5" text-anchor="middle">a stored bit FLIPS:</text>
+  <text x="142" y="122" fill="#f5b7b3" font-size="9.5" text-anchor="middle">cosmic rays, failing/aging</text>
+  <text x="142" y="138" fill="#f5b7b3" font-size="9.5" text-anchor="middle">media, controller bugs</text>
+  <text x="142" y="162" fill="#8b98a5" font-size="9" text-anchor="middle">→ a balance silently changes</text>
+
+  <rect x="278" y="62" width="245" height="120" rx="9" fill="#11161c" stroke="#da3633" stroke-width="1.4"/>
+  <text x="400" y="84" fill="#ff7b72" font-size="11.5" font-weight="700" text-anchor="middle">LYING DISKS (M09/9.7)</text>
+  <text x="400" y="106" fill="#f5b7b3" font-size="9.5" text-anchor="middle">disk says "fsync'd" but data</text>
+  <text x="400" y="122" fill="#f5b7b3" font-size="9.5" text-anchor="middle">was in a VOLATILE cache,</text>
+  <text x="400" y="138" fill="#f5b7b3" font-size="9.5" text-anchor="middle">lost on power-fail</text>
+  <text x="400" y="162" fill="#8b98a5" font-size="9" text-anchor="middle">→ "durable" data missing/old</text>
+
+  <rect x="536" y="62" width="245" height="120" rx="9" fill="#11161c" stroke="#da3633" stroke-width="1.4"/>
+  <text x="658" y="84" fill="#ff7b72" font-size="11.5" font-weight="700" text-anchor="middle">TORN / PARTIAL PAGE</text>
+  <text x="658" y="106" fill="#f5b7b3" font-size="9.5" text-anchor="middle">crash MID-WRITE of a 16KB</text>
+  <text x="658" y="122" fill="#f5b7b3" font-size="9.5" text-anchor="middle">page → half-old, half-new</text>
+  <text x="658" y="138" fill="#f5b7b3" font-size="9.5" text-anchor="middle">(disk writes in 4KB sectors)</text>
+  <text x="658" y="162" fill="#8b98a5" font-size="9" text-anchor="middle">→ a corrupt page</text>
+
+  <!-- the terror -->
+  <rect x="20" y="192" width="760" height="40" rx="8" fill="#3a1410" stroke="#da3633" stroke-width="1.4"/>
+  <text x="400" y="212" fill="#ff7b72" font-size="11.5" font-weight="700" text-anchor="middle">THE TERROR: wrong data with NO error — you read it as truth (authorize against a corrupt balance) · corruption REPLICATES + gets into BACKUPS</text>
+  <text x="400" y="226" fill="#f5b7b3" font-size="9" text-anchor="middle">undetectable until a checksum mismatch on read, or reconciliation (balance ≠ Σ entries), or a customer complaint</text>
+
+  <!-- defenses -->
+  <rect x="20" y="242" width="245" height="92" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="142" y="262" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">PAGE CHECKSUMS (M09)</text>
+  <text x="142" y="282" fill="#a8e6c2" font-size="9" text-anchor="middle">every page has a checksum;</text>
+  <text x="142" y="296" fill="#a8e6c2" font-size="9" text-anchor="middle">mismatch on read → DETECTED</text>
+  <text x="142" y="312" fill="#a8e6c2" font-size="9" text-anchor="middle">(refuses the corrupt page)</text>
+  <text x="142" y="328" fill="#8b98a5" font-size="8.5" text-anchor="middle">+ CHECK TABLE to scan</text>
+
+  <rect x="278" y="242" width="245" height="92" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="400" y="262" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">DOUBLEWRITE BUFFER (M09)</text>
+  <text x="400" y="282" fill="#a8e6c2" font-size="9" text-anchor="middle">pages written TWICE → a torn</text>
+  <text x="400" y="296" fill="#a8e6c2" font-size="9" text-anchor="middle">write is RECOVERABLE from</text>
+  <text x="400" y="312" fill="#a8e6c2" font-size="9" text-anchor="middle">the intact copy</text>
+  <text x="400" y="328" fill="#8b98a5" font-size="8.5" text-anchor="middle">torn pages auto-recovered</text>
+
+  <rect x="536" y="242" width="245" height="92" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="658" y="262" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">HONEST FSYNC + RECONCILE</text>
+  <text x="658" y="282" fill="#a8e6c2" font-size="9" text-anchor="middle">disable volatile disk caches</text>
+  <text x="658" y="296" fill="#a8e6c2" font-size="9" text-anchor="middle">(M09/9.7) · ECC RAM · ZFS</text>
+  <text x="658" y="312" fill="#a8e6c2" font-size="9" text-anchor="middle">+ reconciliation (M12/12.14)</text>
+  <text x="658" y="328" fill="#8b98a5" font-size="8.5" text-anchor="middle">for LOGICAL corruption</text>
+
+  <rect x="20" y="344" width="760" height="58" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="400" y="366" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">💰 VERDICT: money silently WRONG (corrupt balances acted on as truth) — the SILENT catastrophe</text>
+  <text x="400" y="388" fill="#a8e6c2" font-size="9.5" text-anchor="middle">defend (checksums + doublewrite + honest fsync) AND detect (reconcile) — because you WON'T get an error · recover: restore + PITR (15.7)</text>
+</svg>

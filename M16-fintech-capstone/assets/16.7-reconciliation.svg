@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 390" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="390" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">16.7 · Reconciliation — the money-never-lies backstop</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">independently re-derive + match → detect/repair any drift · runs on replicas/warehouse (fed by CDC), not the money path</text>
+
+  <!-- internal -->
+  <rect x="20" y="62" width="370" height="120" rx="10" fill="#11161c" stroke="#1f6feb" stroke-width="1.4"/>
+  <text x="205" y="84" fill="#9fd0ff" font-size="11.5" font-weight="700" text-anchor="middle">INTERNAL reconciliation</text>
+  <rect x="40" y="96" width="150" height="40" rx="5" fill="#13361f" stroke="#2ea043"/><text x="115" y="112" fill="#a8e6c2" font-size="8.5" text-anchor="middle">re-derive from the</text><text x="115" y="125" fill="#a8e6c2" font-size="8.5" text-anchor="middle">IMMUTABLE ledger</text>
+  <text x="240" y="120" fill="#9fd0ff" font-size="13" text-anchor="middle">=?</text>
+  <rect x="265" y="96" width="105" height="40" rx="5" fill="#1b3a5c" stroke="#2f6db5"/><text x="317" y="112" fill="#cde3ff" font-size="8.5" text-anchor="middle">cached</text><text x="317" y="125" fill="#cde3ff" font-size="8.5" text-anchor="middle">balance</text>
+  <text x="205" y="154" fill="#a8e6c2" font-size="9" text-anchor="middle">balance = Σ entries? · Σ debits = Σ credits?</text>
+  <text x="205" y="172" fill="#8b98a5" font-size="8.5" text-anchor="middle">mismatch → drift (lost update M15/15.9, half-Saga, bug)</text>
+
+  <!-- external -->
+  <rect x="410" y="62" width="370" height="120" rx="10" fill="#11161c" stroke="#d29922" stroke-width="1.4"/>
+  <text x="595" y="84" fill="#f0c674" font-size="11.5" font-weight="700" text-anchor="middle">EXTERNAL reconciliation</text>
+  <rect x="430" y="96" width="150" height="40" rx="5" fill="#3a2e0a" stroke="#d29922"/><text x="505" y="112" fill="#f5e6c7" font-size="8.5" text-anchor="middle">platform's</text><text x="505" y="125" fill="#f5e6c7" font-size="8.5" text-anchor="middle">transactions</text>
+  <text x="630" y="120" fill="#f0c674" font-size="13" text-anchor="middle">=?</text>
+  <rect x="655" y="96" width="105" height="40" rx="5" fill="#1b3a5c" stroke="#2f6db5"/><text x="707" y="112" fill="#cde3ff" font-size="8.5" text-anchor="middle">processor /</text><text x="707" y="125" fill="#cde3ff" font-size="8.5" text-anchor="middle">bank records</text>
+  <text x="595" y="154" fill="#f5e6c7" font-size="9" text-anchor="middle">internal ledger = external settlement records?</text>
+  <text x="595" y="172" fill="#8b98a5" font-size="8.5" text-anchor="middle">unmatched → drift (missed event M12/12.10, discrepancy)</text>
+
+  <!-- repair -->
+  <rect x="20" y="196" width="760" height="60" rx="10" fill="#11161c" stroke="#8957e5" stroke-width="1.4"/>
+  <text x="400" y="216" fill="#d2a8ff" font-size="11.5" font-weight="700" text-anchor="middle">on DRIFT → investigate (trace the cause) → REPAIR with a compensating ledger entry (NEVER mutate, M01/1.17) + audit trail + ALERT</text>
+  <text x="400" y="238" fill="#e7d6ff" font-size="9.5" text-anchor="middle">runs on REPLICAS / the WAREHOUSE (M02/2.17, M10 — offloads the primary), fed by the outbox/CDC backbone (16.12, M12/12.12)</text>
+
+  <rect x="20" y="270" width="760" height="56" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="1.2"/>
+  <text x="400" y="290" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">a BACKSTOP, not a primary mechanism — it detects RESIDUAL errors after idempotency/atomic-transfers/outbox prevent most</text>
+  <text x="400" y="310" fill="#a8e6c2" font-size="9.5" text-anchor="middle">must use a GENUINELY independent source (the immutable ledger, external records) or it just re-confirms the same bug</text>
+
+  <rect x="20" y="338" width="760" height="44" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="400" y="360" fill="#7ee2a8" font-size="11.5" font-weight="700" text-anchor="middle">💰 THE money-never-lies backstop — makes "did money get lost/duplicated?" answerable ("no, reconciliation would catch it")</text>
+  <text x="400" y="376" fill="#a8e6c2" font-size="9.5" text-anchor="middle">why eventual consistency is SAFE for money (M12/12.14) · the immutable ledger (16.2) makes it possible · the final guarantee under the platform</text>
+</svg>

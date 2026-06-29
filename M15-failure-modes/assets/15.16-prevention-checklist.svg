@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="470" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">15.16 · The prevention checklist — catastrophe → its prevention</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">the "money-never-lies in the face of catastrophe" posture · 3 universals underpin all: durability, reconciliation, tested recovery + early-warning</text>
+
+  <!-- left column -->
+  <rect x="20" y="60" width="375" height="324" rx="9" fill="#11161c" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="35" y="80" fill="#7ee2a8" font-size="10.5" font-weight="700">lost commits (15.2)</text><text x="200" y="80" fill="#a8e6c2" font-size="9">→ flush_log=1 + sync_binlog=1 + semi-sync</text>
+  <text x="35" y="104" fill="#7ee2a8" font-size="10.5" font-weight="700">split-brain (15.3)</text><text x="200" y="104" fill="#a8e6c2" font-size="9">→ FENCING/STONITH or quorum (M10/10.11)</text>
+  <text x="35" y="128" fill="#7ee2a8" font-size="10.5" font-weight="700">errant txns (15.4)</text><text x="200" y="128" fill="#a8e6c2" font-size="9">→ super_read_only on all replicas</text>
+  <text x="35" y="152" fill="#7ee2a8" font-size="10.5" font-weight="700">corruption (15.5)</text><text x="200" y="152" fill="#a8e6c2" font-size="9">→ checksums + doublewrite + honest fsync</text>
+  <text x="35" y="176" fill="#7ee2a8" font-size="10.5" font-weight="700">force_recovery (15.6)</text><text x="200" y="176" fill="#a8e6c2" font-size="9">→ tested backups + healthy replicas</text>
+  <text x="35" y="200" fill="#7ee2a8" font-size="10.5" font-weight="700">PITR gaps (15.7)</text><text x="200" y="200" fill="#a8e6c2" font-size="9">→ sync_binlog=1 + retention + drills</text>
+  <text x="35" y="224" fill="#7ee2a8" font-size="10.5" font-weight="700">dropped table (15.8)</text><text x="200" y="224" fill="#a8e6c2" font-size="9">→ DDL least-privilege + PITR prereqs</text>
+  <text x="35" y="248" fill="#7ee2a8" font-size="10.5" font-weight="700">app-level loss (15.9)</text><text x="200" y="248" fill="#a8e6c2" font-size="9">→ atomic UPDATE/FOR UPDATE + idempotency</text>
+  <text x="35" y="272" fill="#7ee2a8" font-size="10.5" font-weight="700">backup won't restore (15.10)</text><text x="220" y="272" fill="#a8e6c2" font-size="9">→ tested restore DRILLS</text>
+  <text x="35" y="296" fill="#7ee2a8" font-size="10.5" font-weight="700">disk/OOM/HLL (15.11-13)</text><text x="220" y="296" fill="#a8e6c2" font-size="9">→ early-warning signals (13.11)</text>
+  <text x="35" y="320" fill="#7ee2a8" font-size="10.5" font-weight="700">SBR divergence (15.14)</text><text x="220" y="320" fill="#a8e6c2" font-size="9">→ binlog_format=ROW + pt-table-checksum</text>
+  <text x="35" y="350" fill="#f0c674" font-size="10" font-weight="700">each item prevents a SPECIFIC catastrophe</text>
+  <text x="35" y="368" fill="#8b98a5" font-size="9">drawn from M09–M13's guarantees</text>
+
+  <!-- right column: the 3 universals -->
+  <rect x="405" y="60" width="375" height="324" rx="9" fill="#0d1b12" stroke="#8957e5" stroke-width="1.5"/>
+  <text x="592" y="82" fill="#d2a8ff" font-size="12" font-weight="700" text-anchor="middle">THE 3 UNIVERSALS (underpin them all)</text>
+
+  <rect x="425" y="96" width="335" height="80" rx="8" fill="#11161c" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="592" y="116" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">① DURABILITY CONFIG (M09/M10)</text>
+  <text x="592" y="136" fill="#a8e6c2" font-size="9.5" text-anchor="middle">flush_log=1 + sync_binlog=1 + semi-sync</text>
+  <text x="592" y="152" fill="#a8e6c2" font-size="9.5" text-anchor="middle">→ no committed transfer lost; durable binlog</text>
+  <text x="592" y="168" fill="#8b98a5" font-size="9" text-anchor="middle">closes the crash window + enables PITR</text>
+
+  <rect x="425" y="184" width="335" height="80" rx="8" fill="#11161c" stroke="#1f6feb" stroke-width="1.3"/>
+  <text x="592" y="204" fill="#9fd0ff" font-size="11" font-weight="700" text-anchor="middle">② RECONCILIATION (M12/12.14)</text>
+  <text x="592" y="224" fill="#cde3ff" font-size="9.5" text-anchor="middle">re-derive from the immutable ledger,</text>
+  <text x="592" y="240" fill="#cde3ff" font-size="9.5" text-anchor="middle">match external records → DETECT anything</text>
+  <text x="592" y="256" fill="#8b98a5" font-size="9" text-anchor="middle">that slipped through (the universal backstop)</text>
+
+  <rect x="425" y="272" width="335" height="100" rx="8" fill="#11161c" stroke="#d29922" stroke-width="1.3"/>
+  <text x="592" y="292" fill="#f0c674" font-size="11" font-weight="700" text-anchor="middle">③ TESTED RECOVERY + EARLY-WARNING (M13)</text>
+  <text x="592" y="312" fill="#f5e6c7" font-size="9.5" text-anchor="middle">tested restore drills (13.5) → PROVEN recoverable</text>
+  <text x="592" y="328" fill="#f5e6c7" font-size="9.5" text-anchor="middle">early-warning signals (13.11): lag, HLL,</text>
+  <text x="592" y="344" fill="#f5e6c7" font-size="9.5" text-anchor="middle">checkpoint, disk, semi-sync → catch the buildups</text>
+  <text x="592" y="362" fill="#8b98a5" font-size="9" text-anchor="middle">predict + prove, don't hope</text>
+
+  <rect x="20" y="394" width="760" height="68" rx="10" fill="#0d1b12" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="400" y="416" fill="#7ee2a8" font-size="11.5" font-weight="700" text-anchor="middle">💰 VERDICT: money SAFE — if the checklist is followed (every catastrophe prevented or cleanly recoverable + verified)</text>
+  <text x="400" y="438" fill="#a8e6c2" font-size="9.5" text-anchor="middle">durable + single-writer + corruption-defended + recoverable + app-correct + watched + VERIFIED → money stays safe even when the system fails</text>
+  <text x="400" y="456" fill="#8b98a5" font-size="9.5" text-anchor="middle">the answer to M16's "what does zero-data-loss really cost?" = following all of this · catastrophes are SURVIVABLE</text>
+</svg>

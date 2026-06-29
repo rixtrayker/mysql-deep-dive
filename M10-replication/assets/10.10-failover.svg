@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="440" fill="#0f1419"/>
+  <text x="400" y="28" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">10.10 · Failover &amp; the data-loss window</text>
+  <text x="400" y="48" fill="#8b98a5" font-size="12" text-anchor="middle">source dies → promote a replica → but un-received committed txns are LOST (availability vs data loss)</text>
+
+  <!-- the failover sequence -->
+  <rect x="30" y="66" width="740" height="118" rx="10" fill="#11161c" stroke="#30363d"/>
+  <text x="400" y="86" fill="#e6edf3" font-size="12.5" font-weight="700" text-anchor="middle">the failover sequence (automated by an orchestrator, 10.13)</text>
+  <g font-size="10" text-anchor="middle">
+    <rect x="44" y="98" width="100" height="40" rx="5" fill="#3a1a1a" stroke="#da3633"/><text x="94" y="115" fill="#ff7b72">1 · DETECT</text><text x="94" y="130" fill="#f5c2c0">source dead</text>
+    <rect x="158" y="98" width="110" height="40" rx="5" fill="#3a2a14" stroke="#d29922"/><text x="213" y="115" fill="#f0c674" font-weight="600">2 · FENCE ⚠</text><text x="213" y="130" fill="#f5e6c7">isolate old src (10.11)</text>
+    <rect x="282" y="98" width="110" height="40" rx="5" fill="#1b3a5c" stroke="#2f6db5"/><text x="337" y="115" fill="#cde3ff">3 · CHOOSE</text><text x="337" y="130" fill="#9fd0ff">freshest replica</text>
+    <rect x="406" y="98" width="100" height="40" rx="5" fill="#143a2a" stroke="#2ea043"/><text x="456" y="115" fill="#7ee2a8">4 · PROMOTE</text><text x="456" y="130" fill="#a8e6c2">read_only=OFF</text>
+    <rect x="520" y="98" width="110" height="40" rx="5" fill="#2d2150" stroke="#8957e5"/><text x="575" y="115" fill="#d2a8ff">5 · RE-POINT</text><text x="575" y="130" fill="#cdb4ff">others (GTID, 10.7)</text>
+    <rect x="644" y="98" width="110" height="40" rx="5" fill="#11243a" stroke="#2f6db5"/><text x="699" y="115" fill="#9fd0ff">6 · RE-ROUTE</text><text x="699" y="130" fill="#cde3ff">writes (proxy)</text>
+  </g>
+  <path d="M144,118 L156,118" stroke="#8b98a5" stroke-width="1.2"/>
+  <path d="M268,118 L280,118" stroke="#8b98a5" stroke-width="1.2"/>
+  <path d="M392,118 L404,118" stroke="#8b98a5" stroke-width="1.2"/>
+  <path d="M506,118 L518,118" stroke="#8b98a5" stroke-width="1.2"/>
+  <path d="M630,118 L642,118" stroke="#8b98a5" stroke-width="1.2"/>
+  <text x="400" y="158" fill="#f0c674" font-size="10.5" text-anchor="middle">GTID makes RE-POINT robust — each replica auto-finds exactly its missing txns (10.7)</text>
+  <text x="400" y="175" fill="#ff7b72" font-size="10.5" text-anchor="middle">FENCE is non-negotiable — failover without it risks SPLIT-BRAIN (10.11)</text>
+
+  <!-- ASYNC loss window -->
+  <rect x="30" y="200" width="365" height="118" rx="10" fill="#11161c" stroke="#da3633" stroke-width="1.4"/>
+  <text x="212" y="222" fill="#ff7b72" font-size="12.5" font-weight="700" text-anchor="middle">✗ ASYNC — the data-loss window</text>
+  <text x="48" y="246" fill="#f5c2c0" font-size="10.5">source had txns 998, 999, 1000 committed</text>
+  <text x="48" y="264" fill="#f5c2c0" font-size="10.5">promoted replica only RECEIVED up to 997</text>
+  <text x="48" y="286" fill="#ff7b72" font-size="11" font-weight="600">→ txns 998–1000 are LOST (gone)</text>
+  <text x="48" y="306" fill="#8b98a5" font-size="10">loss window = the promoted replica's LAG (10.5)</text>
+
+  <!-- SEMI-SYNC bounds it -->
+  <rect x="405" y="200" width="365" height="118" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="1.6"/>
+  <text x="587" y="222" fill="#7ee2a8" font-size="12.5" font-weight="700" text-anchor="middle">✓ SEMI-SYNC — bounds it to ZERO</text>
+  <text x="423" y="246" fill="#a8e6c2" font-size="10.5">source WAITED for ≥1 replica to receive each</text>
+  <text x="423" y="264" fill="#a8e6c2" font-size="10.5">commit before acking (10.4)</text>
+  <text x="423" y="286" fill="#7ee2a8" font-size="11" font-weight="600">→ promote that replica → NO confirmed txn lost</text>
+  <text x="423" y="306" fill="#a8e6c2" font-size="10">+ choose the FRESHEST replica to minimize loss</text>
+
+  <!-- principle -->
+  <rect x="30" y="332" width="740" height="86" rx="8" fill="#11243a" stroke="#1f6feb"/>
+  <text x="400" y="354" fill="#9fd0ff" font-size="12" font-weight="700" text-anchor="middle">you can't have instant AVAILABILITY and ZERO LOSS when the leader dies mid-replication (a CAP choice, M12)</text>
+  <text x="50" y="378" fill="#cde3ff" font-size="11">● minimize loss: synchronous acks (semi-sync) + choose the freshest replica + fence the old source</text>
+  <text x="50" y="400" fill="#f0c674" font-size="11">● universal: Raft (committed-by-majority survives) · Kafka (unclean leader election loses un-replicated) · every leader-follower system</text>
+</svg>

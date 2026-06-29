@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="760" height="360" fill="#0f1419"/>
+  <text x="380" y="28" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">5.6 · Covering index — answer from the index alone</text>
+  <text x="380" y="48" fill="#8b98a5" font-size="12" text-anchor="middle">SELECT amount WHERE account_id=42 — all needed columns are IN the index → skip the row fetch</text>
+
+  <!-- NON-COVERING (left) -->
+  <rect x="30" y="70" width="340" height="250" rx="10" fill="#11161c" stroke="#da3633" stroke-width="1.5"/>
+  <text x="200" y="92" fill="#ff7b72" text-anchor="middle" font-weight="600">NON-COVERING  index (account_id)</text>
+  <rect x="70" y="108" width="260" height="60" rx="6" fill="#1f1838" stroke="#6e40c9"/>
+  <text x="200" y="128" fill="#d2a8ff" text-anchor="middle" font-size="11">secondary leaf: account_id=42 → PK</text>
+  <text x="200" y="150" fill="#b78bff" text-anchor="middle" font-size="11">(amount NOT here → must fetch)</text>
+  <path d="M200,168 L200,200" stroke="#d29922" stroke-width="2.5" fill="none" marker-end="url(#a6)"/>
+  <text x="255" y="188" fill="#f0c674" font-size="10">hop per row</text>
+  <rect x="70" y="200" width="260" height="55" rx="6" fill="#143a2a" stroke="#2ea043"/>
+  <text x="200" y="222" fill="#7ee2a8" text-anchor="middle" font-size="11">clustered index: fetch full row</text>
+  <text x="200" y="242" fill="#c7f5d9" text-anchor="middle" font-size="11">read amount=-100.00</text>
+  <text x="200" y="285" fill="#ff7b72" text-anchor="middle" font-size="12" font-weight="600">2 descents/row · random I/O</text>
+  <text x="200" y="305" fill="#f5c2c0" text-anchor="middle" font-size="11">EXPLAIN: (silent bookmark lookups)</text>
+
+  <!-- COVERING (right) -->
+  <rect x="390" y="70" width="340" height="250" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="2"/>
+  <text x="560" y="92" fill="#7ee2a8" text-anchor="middle" font-weight="600">COVERING  index (account_id, amount)</text>
+  <rect x="430" y="120" width="260" height="100" rx="6" fill="#143a2a" stroke="#2ea043"/>
+  <text x="560" y="144" fill="#7ee2a8" text-anchor="middle" font-size="11">secondary leaf holds BOTH:</text>
+  <text x="560" y="168" fill="#c7f5d9" text-anchor="middle" font-size="12">account_id=42 │ amount=-100.00</text>
+  <text x="560" y="192" fill="#c7f5d9" text-anchor="middle" font-size="11">(+ implicit PK, 5.5)</text>
+  <text x="560" y="212" fill="#7ee2a8" text-anchor="middle" font-size="11">✓ query answered HERE</text>
+  <text x="560" y="262" fill="#7ee2a8" text-anchor="middle" font-size="12" font-weight="600">1 descent · NO row fetch</text>
+  <text x="560" y="282" fill="#c7f5d9" text-anchor="middle" font-size="11">EXPLAIN: Extra = "Using index"</text>
+  <text x="560" y="304" fill="#7ee2a8" text-anchor="middle" font-size="11">→ often order-of-magnitude faster</text>
+
+  <defs><marker id="a6" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#d29922"/></marker></defs>
+
+  <text x="380" y="345" fill="#f0c674" text-anchor="middle" font-size="11">tradeoff: covering index is wider (more storage + write cost, 5.15) — cover the HOT reads only (5.16)</text>
+</svg>

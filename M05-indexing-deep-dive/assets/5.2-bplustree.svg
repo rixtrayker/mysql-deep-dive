@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="760" height="420" fill="#0f1419"/>
+  <text x="380" y="28" fill="#e6edf3" font-size="17" font-weight="700" text-anchor="middle">5.2 · B+Tree — point lookup + range scan</text>
+  <text x="380" y="48" fill="#8b98a5" font-size="12" text-anchor="middle">balanced · high fanout · all keys in sorted, linked leaves</text>
+
+  <!-- root -->
+  <rect x="300" y="70" width="160" height="40" rx="6" fill="#1f6feb" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="380" y="88" fill="#fff" text-anchor="middle" font-weight="600">ROOT (internal)</text>
+  <text x="380" y="104" fill="#cde3ff" text-anchor="middle" font-size="11">· 30 ·  · 60 ·</text>
+
+  <!-- internal level -->
+  <rect x="120" y="170" width="140" height="38" rx="6" fill="#1b3a5c" stroke="#2f6db5" stroke-width="1.5"/>
+  <text x="190" y="194" fill="#cde3ff" text-anchor="middle" font-size="11">10 · 20  (&lt;30)</text>
+  <rect x="310" y="170" width="140" height="38" rx="6" fill="#1b3a5c" stroke="#2f6db5" stroke-width="1.5"/>
+  <text x="380" y="194" fill="#cde3ff" text-anchor="middle" font-size="11">40 · 50  (30–60)</text>
+  <rect x="500" y="170" width="140" height="38" rx="6" fill="#1b3a5c" stroke="#2f6db5" stroke-width="1.5"/>
+  <text x="570" y="194" fill="#cde3ff" text-anchor="middle" font-size="11">70 · 80  (&gt;60)</text>
+
+  <!-- root -> internal pointers -->
+  <path d="M340,110 L190,170" stroke="#58a6ff" stroke-width="1.5" fill="none"/>
+  <path d="M380,110 L380,170" stroke="#58a6ff" stroke-width="1.5" fill="none"/>
+  <path d="M420,110 L570,170" stroke="#58a6ff" stroke-width="1.5" fill="none"/>
+
+  <!-- leaves -->
+  <g>
+    <rect x="40"  y="280" width="100" height="60" rx="6" fill="#143a2a" stroke="#2ea043" stroke-width="1.5"/>
+    <text x="90"  y="300" fill="#7ee2a8" text-anchor="middle" font-size="11">LEAF</text>
+    <text x="90"  y="318" fill="#c7f5d9" text-anchor="middle" font-size="11">10 · 15</text>
+    <rect x="160" y="280" width="100" height="60" rx="6" fill="#143a2a" stroke="#2ea043" stroke-width="1.5"/>
+    <text x="210" y="318" fill="#c7f5d9" text-anchor="middle" font-size="11">20 · 25</text>
+    <rect x="280" y="280" width="100" height="60" rx="6" fill="#143a2a" stroke="#2ea043" stroke-width="1.5"/>
+    <text x="330" y="318" fill="#c7f5d9" text-anchor="middle" font-size="11">40 · 45</text>
+    <rect x="400" y="280" width="100" height="60" rx="6" fill="#3a2a14" stroke="#d29922" stroke-width="2"/>
+    <text x="450" y="300" fill="#f0c674" text-anchor="middle" font-size="11">42 found ✓</text>
+    <text x="450" y="318" fill="#f5e6c7" text-anchor="middle" font-size="11">50 · 55</text>
+    <rect x="520" y="280" width="100" height="60" rx="6" fill="#143a2a" stroke="#2ea043" stroke-width="1.5"/>
+    <text x="570" y="318" fill="#c7f5d9" text-anchor="middle" font-size="11">70 · 75</text>
+    <rect x="640" y="280" width="80"  height="60" rx="6" fill="#143a2a" stroke="#2ea043" stroke-width="1.5"/>
+    <text x="680" y="318" fill="#c7f5d9" text-anchor="middle" font-size="11">80 · 90</text>
+  </g>
+
+  <!-- internal -> leaf pointers -->
+  <path d="M170,208 L90,280"  stroke="#2f6db5" stroke-width="1.2" fill="none"/>
+  <path d="M210,208 L210,280" stroke="#2f6db5" stroke-width="1.2" fill="none"/>
+  <path d="M360,208 L330,280" stroke="#2f6db5" stroke-width="1.2" fill="none"/>
+  <path d="M400,208 L450,280" stroke="#2f6db5" stroke-width="1.2" fill="none"/>
+  <path d="M550,208 L570,280" stroke="#2f6db5" stroke-width="1.2" fill="none"/>
+  <path d="M590,208 L680,280" stroke="#2f6db5" stroke-width="1.2" fill="none"/>
+
+  <!-- linked leaves (range scan) -->
+  <g stroke="#d29922" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M140,335 L160,335"/>
+    <path d="M260,335 L280,335"/>
+    <path d="M380,335 L400,335"/>
+    <path d="M500,335 L520,335"/>
+    <path d="M620,335 L640,335"/>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#d29922"/>
+    </marker>
+  </defs>
+
+  <!-- annotations -->
+  <text x="60" y="378" fill="#58a6ff" font-size="12" font-weight="600">▼ POINT LOOKUP (=42):</text>
+  <text x="60" y="396" fill="#8b98a5" font-size="11">root → internal(30–60) → leaf → 42  ·  O(log n), ~3 page reads</text>
+  <text x="430" y="378" fill="#d29922" font-size="12" font-weight="600">▶ RANGE SCAN (linked leaves):</text>
+  <text x="430" y="396" fill="#8b98a5" font-size="11">find start leaf, then walk → → → sequentially (no re-descent)</text>
+</svg>

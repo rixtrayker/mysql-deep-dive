@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="420" fill="#0f1419"/>
+  <text x="400" y="30" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">9.4 · The redo log (WAL) — sequential, circular, fsync'd at commit</text>
+  <text x="400" y="50" fill="#8b98a5" font-size="12" text-anchor="middle">a commit is durable once its redo is on stable storage — data pages flushed lazily, LSN orders everything</text>
+
+  <!-- circular redo log -->
+  <circle cx="200" cy="220" r="110" fill="none" stroke="#2ea043" stroke-width="2"/>
+  <text x="200" y="150" fill="#7ee2a8" font-size="12" font-weight="700" text-anchor="middle">REDO LOG (circular)</text>
+  <!-- segments -->
+  <g font-size="9.5">
+    <path d="M200,110 A110,110 0 0,1 295,165" fill="none" stroke="#13361f" stroke-width="14"/>
+    <path d="M295,165 A110,110 0 0,1 295,275" fill="none" stroke="#13361f" stroke-width="14"/>
+    <path d="M295,275 A110,110 0 0,1 200,330" fill="none" stroke="#3a2a14" stroke-width="14"/>
+    <path d="M200,330 A110,110 0 0,1 105,275" fill="none" stroke="#1b3a5c" stroke-width="14"/>
+  </g>
+  <text x="270" y="200" fill="#a8e6c2" font-size="10">LSN 5000</text>
+  <text x="285" y="240" fill="#a8e6c2" font-size="10">newest →</text>
+  <text x="180" y="345" fill="#f0c674" font-size="10">checkpoint</text>
+  <text x="100" y="240" fill="#9fd0ff" font-size="10">← reusable</text>
+  <text x="200" y="225" fill="#8b98a5" font-size="9.5" text-anchor="middle">append-only,</text>
+  <text x="200" y="240" fill="#8b98a5" font-size="9.5" text-anchor="middle">sequential</text>
+  <text x="200" y="255" fill="#8b98a5" font-size="9.5" text-anchor="middle">(fast I/O)</text>
+  <text x="200" y="360" fill="#6e7681" font-size="9" text-anchor="middle">reuse a region only once its dirty pages are checkpointed (9.6)</text>
+
+  <!-- commit flow -->
+  <rect x="370" y="90" width="410" height="260" rx="10" fill="#11161c" stroke="#30363d"/>
+  <text x="575" y="112" fill="#e6edf3" font-size="12.5" font-weight="700" text-anchor="middle">a transfer's COMMIT</text>
+  <rect x="388" y="124" width="374" height="32" rx="5" fill="#1b3a5c" stroke="#2f6db5"/>
+  <text x="400" y="144" fill="#cde3ff" font-size="11">1 · modify pages in buffer pool → append redo to log buffer (RAM)</text>
+  <rect x="388" y="162" width="374" height="44" rx="5" fill="#143a2a" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="400" y="180" fill="#c7f5d9" font-size="11">2 · COMMIT: write redo to log files + FSYNC to stable storage</text>
+  <text x="400" y="197" fill="#7ee2a8" font-size="11">(innodb_flush_log_at_trx_commit=1, 9.10)</text>
+  <rect x="388" y="212" width="374" height="30" rx="5" fill="#13361f" stroke="#2ea043"/>
+  <text x="400" y="232" fill="#7ee2a8" font-size="11">3 · COMMIT RETURNS → "durable" ✓ (even if power dies now)</text>
+  <rect x="388" y="248" width="374" height="30" rx="5" fill="#3a2a14" stroke="#d29922"/>
+  <text x="400" y="268" fill="#f5e6c7" font-size="11">4 · dirty data pages flushed to disk LATER (lazy, 9.1/9.6)</text>
+  <rect x="388" y="284" width="374" height="50" rx="5" fill="#11243a" stroke="#2f6db5"/>
+  <text x="400" y="302" fill="#9fd0ff" font-size="11">on crash before step 4 → recovery REPLAYS redo (9.14)</text>
+  <text x="400" y="320" fill="#cde3ff" font-size="10.5">→ re-applies the committed change → nothing lost</text>
+
+  <text x="400" y="392" fill="#58a6ff" font-size="11.5" text-anchor="middle" font-weight="600">redo = PHYSICAL page-change log (crash recovery) · vs binlog = LOGICAL log (replication, M10) — kept consistent via 2PC (9.11)</text>
+</svg>

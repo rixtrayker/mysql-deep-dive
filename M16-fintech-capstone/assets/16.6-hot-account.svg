@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="400" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">16.6 · Hot account contention — and the relief patterns</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">a popular account (merchant, float) = a hot ROW (M08) · the immutable ledger is never contended; the DERIVED balance is</text>
+
+  <!-- the problem -->
+  <rect x="20" y="62" width="760" height="48" rx="9" fill="#11161c" stroke="#da3633" stroke-width="1.4"/>
+  <text x="400" y="82" fill="#ff7b72" font-size="11" font-weight="700" text-anchor="middle">PROBLEM: 10k transfers/sec into ONE merchant account → all contend on its balance ROW → serialized → bottleneck (M08, deadlocks M15/15.13)</text>
+  <text x="400" y="100" fill="#f5b7b3" font-size="9.5" text-anchor="middle">contention is ONLY on the derived BALANCE — the append-only LEDGER (16.2) is never contended (every transfer still writes an entry)</text>
+
+  <!-- four relief patterns -->
+  <rect x="20" y="122" width="185" height="148" rx="9" fill="#11161c" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="112" y="142" fill="#7ee2a8" font-size="10.5" font-weight="700" text-anchor="middle">① ATOMIC UPDATE</text>
+  <text x="112" y="162" fill="#a8e6c2" font-size="8.5" text-anchor="middle">UPDATE … SET balance =</text>
+  <text x="112" y="175" fill="#a8e6c2" font-size="8.5" text-anchor="middle">balance + :amt (M08)</text>
+  <text x="112" y="193" fill="#a8e6c2" font-size="8.5" text-anchor="middle">no read-then-write gap;</text>
+  <text x="112" y="206" fill="#a8e6c2" font-size="8.5" text-anchor="middle">increments don't deadlock</text>
+  <text x="112" y="228" fill="#7ee2a8" font-size="8.5" text-anchor="middle">the first-line fix</text>
+  <text x="112" y="250" fill="#8b98a5" font-size="8" text-anchor="middle">(always use it)</text>
+
+  <rect x="213" y="122" width="185" height="148" rx="9" fill="#11161c" stroke="#1f6feb" stroke-width="1.3"/>
+  <text x="305" y="142" fill="#9fd0ff" font-size="10.5" font-weight="700" text-anchor="middle">② SPLIT BALANCES</text>
+  <text x="305" y="162" fill="#cde3ff" font-size="8.5" text-anchor="middle">split into N sub-balances</text>
+  <text x="305" y="175" fill="#cde3ff" font-size="8.5" text-anchor="middle">(buckets, M11)</text>
+  <text x="305" y="193" fill="#cde3ff" font-size="8.5" text-anchor="middle">each transfer → a RANDOM</text>
+  <text x="305" y="206" fill="#cde3ff" font-size="8.5" text-anchor="middle">sub-balance (spread N×)</text>
+  <text x="305" y="228" fill="#9fd0ff" font-size="8.5" text-anchor="middle">true balance = Σ sub-balances</text>
+  <text x="305" y="250" fill="#8b98a5" font-size="8" text-anchor="middle">1 hot row → N warm rows</text>
+
+  <rect x="406" y="122" width="185" height="148" rx="9" fill="#11161c" stroke="#d29922" stroke-width="1.3"/>
+  <text x="498" y="142" fill="#f0c674" font-size="10.5" font-weight="700" text-anchor="middle">③ BATCH / ASYNC</text>
+  <text x="498" y="162" fill="#f5e6c7" font-size="8.5" text-anchor="middle">write the ledger entry NOW</text>
+  <text x="498" y="175" fill="#f5e6c7" font-size="8.5" text-anchor="middle">(append-only, uncontended)</text>
+  <text x="498" y="193" fill="#f5e6c7" font-size="8.5" text-anchor="middle">batch-apply to the balance</text>
+  <text x="498" y="206" fill="#f5e6c7" font-size="8.5" text-anchor="middle">ASYNC (one update/many)</text>
+  <text x="498" y="228" fill="#f0c674" font-size="8.5" text-anchor="middle">balance eventually consistent</text>
+  <text x="498" y="250" fill="#8b98a5" font-size="8" text-anchor="middle">(reconciled, 16.7)</text>
+
+  <rect x="599" y="122" width="181" height="148" rx="9" fill="#11161c" stroke="#8957e5" stroke-width="1.3"/>
+  <text x="689" y="142" fill="#d2a8ff" font-size="10.5" font-weight="700" text-anchor="middle">④ SKIP LOCKED</text>
+  <text x="689" y="162" fill="#e7d6ff" font-size="8.5" text-anchor="middle">queue-style processing</text>
+  <text x="689" y="175" fill="#e7d6ff" font-size="8.5" text-anchor="middle">(M08): SELECT … FOR</text>
+  <text x="689" y="188" fill="#e7d6ff" font-size="8.5" text-anchor="middle">UPDATE SKIP LOCKED</text>
+  <text x="689" y="206" fill="#e7d6ff" font-size="8.5" text-anchor="middle">skip locked rows →</text>
+  <text x="689" y="219" fill="#e7d6ff" font-size="8.5" text-anchor="middle">no contention</text>
+  <text x="689" y="248" fill="#8b98a5" font-size="8" text-anchor="middle">for pending-queue work</text>
+
+  <rect x="20" y="282" width="760" height="50" rx="9" fill="#11161c" stroke="#1f6feb" stroke-width="1.2"/>
+  <text x="400" y="302" fill="#9fd0ff" font-size="10.5" font-weight="700" text-anchor="middle">the key insight: the IMMUTABLE LEDGER (16.2) is always the append-only, UNCONTENDED source of truth</text>
+  <text x="400" y="320" fill="#cde3ff" font-size="9.5" text-anchor="middle">contention is only on the DERIVED balance → which you can split / batch / async — and reconcile against the entries (16.7)</text>
+
+  <rect x="20" y="344" width="760" height="44" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="400" y="366" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">💰 money conserved: every transfer still writes a ledger entry (never lost) → the truth is complete; the balance-projection is scaled</text>
+  <text x="400" y="382" fill="#a8e6c2" font-size="9.5" text-anchor="middle">relief patterns preserve money-never-lies — the derived balance is reconciled (16.7) against the immutable entries</text>
+</svg>

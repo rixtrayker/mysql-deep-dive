@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 470" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="470" fill="#0f1419"/>
+  <text x="400" y="30" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">9.10 · The durability tradeoff matrix — exactly what you lose on a crash</text>
+  <text x="400" y="50" fill="#8b98a5" font-size="12" text-anchor="middle">two flush knobs · each setting buys throughput at the cost of a precisely-defined loss window</text>
+
+  <!-- flush_log_at_trx_commit values -->
+  <rect x="40" y="72" width="720" height="178" rx="10" fill="#11161c" stroke="#30363d"/>
+  <text x="400" y="94" fill="#e6edf3" font-size="13" font-weight="700" text-anchor="middle">innodb_flush_log_at_trx_commit (the REDO log, 9.4)</text>
+
+  <rect x="56" y="106" width="688" height="42" rx="6" fill="#143a2a" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="70" y="124" fill="#7ee2a8" font-size="12" font-weight="700">= 1  (DEFAULT, fully durable)</text>
+  <text x="70" y="140" fill="#a8e6c2" font-size="11">write + FSYNC redo at EVERY commit before it returns → crash/power loss loses NOTHING committed · cost: 1 fsync/commit</text>
+
+  <rect x="56" y="154" width="688" height="42" rx="6" fill="#3a2a14" stroke="#d29922" stroke-width="1.4"/>
+  <text x="70" y="172" fill="#f0c674" font-size="12" font-weight="700">= 2  (write every commit, fsync ~1×/sec)</text>
+  <text x="70" y="188" fill="#f5e6c7" font-size="11">mysqld crash → loses nothing (OS has it) · POWER LOSS / OS crash → loses ~1 SECOND of committed txns · faster (no per-commit fsync)</text>
+
+  <rect x="56" y="202" width="688" height="40" rx="6" fill="#3a1a1a" stroke="#da3633" stroke-width="1.4"/>
+  <text x="70" y="220" fill="#ff7b72" font-size="12" font-weight="700">= 0  (fsync ~1×/sec, not at commit)</text>
+  <text x="70" y="236" fill="#f5c2c0" font-size="11">ANY crash (even just mysqld) → loses ~1 SECOND of commits · fastest, least durable</text>
+
+  <!-- sync_binlog -->
+  <rect x="40" y="260" width="720" height="100" rx="10" fill="#11161c" stroke="#30363d"/>
+  <text x="400" y="282" fill="#e6edf3" font-size="13" font-weight="700" text-anchor="middle">sync_binlog (the BINARY log — replication / PITR, M10)</text>
+  <rect x="56" y="294" width="340" height="56" rx="6" fill="#143a2a" stroke="#2ea043"/>
+  <text x="70" y="312" fill="#7ee2a8" font-size="12" font-weight="700">= 1  (durable)</text>
+  <text x="70" y="328" fill="#a8e6c2" font-size="10.5">fsync binlog every commit → replicas / PITR</text>
+  <text x="70" y="342" fill="#a8e6c2" font-size="10.5">never miss a committed txn</text>
+  <rect x="404" y="294" width="340" height="56" rx="6" fill="#3a1a1a" stroke="#da3633"/>
+  <text x="418" y="312" fill="#ff7b72" font-size="12" font-weight="700">= 0 / N  (rely on OS)</text>
+  <text x="418" y="328" fill="#f5c2c0" font-size="10.5">faster, but a crash can lose recent binlog →</text>
+  <text x="418" y="342" fill="#f5c2c0" font-size="10.5">replicas / PITR could MISS committed txns</text>
+
+  <!-- money verdict -->
+  <rect x="40" y="370" width="720" height="74" rx="8" fill="#11243a" stroke="#1f6feb" stroke-width="1.5"/>
+  <text x="400" y="392" fill="#9fd0ff" font-size="13" font-weight="700" text-anchor="middle">💰 for MONEY: (1, 1) is mandatory — nothing lost on crash, replicas/backups stay consistent</text>
+  <text x="60" y="414" fill="#cde3ff" font-size="11">● the fsync cost is amortized by GROUP COMMIT (9.11) — under concurrency many commits share one fsync → (1,1) is affordable at scale</text>
+  <text x="60" y="434" fill="#f0c674" font-size="11">● relax to (2,0) ONLY for loss-tolerant / reconstructible data · caveat: (1,1) only works if the disk chain is HONEST (9.7). Catastrophic misconfig → M15</text>
+</svg>

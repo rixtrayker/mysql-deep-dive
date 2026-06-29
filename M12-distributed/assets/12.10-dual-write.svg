@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="400" fill="#0f1419"/>
+  <text x="400" y="28" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">12.10 · The dual-write problem — two writes, no shared transaction = can diverge</text>
+  <text x="400" y="48" fill="#8b98a5" font-size="12" text-anchor="middle">"save to DB, then publish to Kafka" — a crash between them silently loses the event (or creates a phantom)</text>
+
+  <!-- the naive sequence -->
+  <rect x="60" y="76" width="200" height="56" rx="8" fill="#13361f" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="160" y="98" fill="#7ee2a8" font-size="10.5" font-weight="700" text-anchor="middle">① COMMIT transfer to DB</text>
+  <text x="160" y="116" fill="#a8e6c2" font-size="9" text-anchor="middle">durable ✓ (InnoDB, M07–M09)</text>
+
+  <rect x="350" y="76" width="60" height="56" rx="8" fill="#3a1410" stroke="#da3633" stroke-width="1.8"/>
+  <text x="380" y="100" fill="#ff7b72" font-size="16" font-weight="700" text-anchor="middle">⚡</text>
+  <text x="380" y="120" fill="#ff7b72" font-size="8.5" text-anchor="middle">CRASH</text>
+
+  <rect x="500" y="76" width="200" height="56" rx="8" fill="#11161c" stroke="#da3633" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <text x="600" y="98" fill="#ff7b72" font-size="10.5" font-weight="700" text-anchor="middle">② publish to Kafka ✗</text>
+  <text x="600" y="116" fill="#f5b7b3" font-size="9" text-anchor="middle">NEVER happens</text>
+
+  <path d="M260 104 L348 104" stroke="#8b98a5" stroke-width="1.3" marker-end="url(#s)"/>
+  <path d="M410 104 L498 104" stroke="#da3633" stroke-width="1.3" stroke-dasharray="3 3" marker-end="url(#r)"/>
+
+  <!-- result -->
+  <rect x="60" y="150" width="640" height="64" rx="9" fill="#11161c" stroke="#da3633" stroke-width="1.6"/>
+  <text x="380" y="172" fill="#ff7b72" font-size="12" font-weight="700" text-anchor="middle">→ INCONSISTENT: the DB has the transfer, but nobody downstream knows</text>
+  <text x="380" y="192" fill="#f5b7b3" font-size="9.5" text-anchor="middle">notifications never sent · fraud check never runs · reporting/settlement never sees it · reconciliation drift</text>
+  <text x="380" y="208" fill="#f5b7b3" font-size="9" text-anchor="middle">silent (DB looks correct) + intermittent (only on a crash at the wrong moment) → the worst kind of bug</text>
+
+  <!-- no safe order -->
+  <rect x="60" y="228" width="310" height="76" rx="9" fill="#11161c" stroke="#d29922" stroke-width="1.3"/>
+  <text x="215" y="250" fill="#f0c674" font-size="11" font-weight="700" text-anchor="middle">reversing the order doesn't help</text>
+  <text x="215" y="270" fill="#f5e6c7" font-size="9.5" text-anchor="middle">publish first → crash → DB rolls back</text>
+  <text x="215" y="286" fill="#f5e6c7" font-size="9.5" text-anchor="middle">= downstream acts on a PHANTOM transfer</text>
+  <text x="215" y="300" fill="#8b98a5" font-size="9" text-anchor="middle">NO order of two non-txn writes is safe</text>
+
+  <!-- the fix -->
+  <rect x="390" y="228" width="310" height="76" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="545" y="250" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">THE FIX (12.11 / 12.12)</text>
+  <text x="545" y="270" fill="#a8e6c2" font-size="9.5" text-anchor="middle">OUTBOX: write the event INTO the same DB txn</text>
+  <text x="545" y="286" fill="#a8e6c2" font-size="9.5" text-anchor="middle">CDC: derive the event from the binlog</text>
+  <text x="545" y="300" fill="#8b98a5" font-size="9" text-anchor="middle">→ ONE atomic write, event can't be lost</text>
+
+  <text x="400" y="334" fill="#cdb4ff" font-size="10.5" text-anchor="middle">principle: don't have two sources of truth that can disagree — ONE atomic write, derive everything else from it</text>
+  <text x="400" y="356" fill="#8b98a5" font-size="10" text-anchor="middle">(the same log-is-primary theme as event sourcing M01/1.17, the redo log M09, CDC 12.12) · don't reach for XA here (12.7)</text>
+  <text x="400" y="378" fill="#8b98a5" font-size="10" text-anchor="middle">most practically-important distributed-data lesson — usually under-taught</text>
+
+  <defs>
+    <marker id="s" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8b98a5"/></marker>
+    <marker id="r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#da3633"/></marker>
+  </defs>
+</svg>

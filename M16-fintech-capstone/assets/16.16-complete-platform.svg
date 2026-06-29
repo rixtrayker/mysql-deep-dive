@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 540" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="820" height="540" fill="#0f1419"/>
+  <text x="410" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">16.16 · The complete payments platform — every module, one architecture</text>
+  <text x="410" y="45" fill="#8b98a5" font-size="11.5" text-anchor="middle">correct (M01–M09) × scalable (M10–M11) × distributed-correct (M12) × operable (M13) × survivable (M15) — money never lies, end to end</text>
+
+  <!-- clients/api -->
+  <rect x="330" y="56" width="160" height="30" rx="7" fill="#1b3a5c" stroke="#2f6db5"/><text x="410" y="76" fill="#cde3ff" font-size="10" font-weight="700" text-anchor="middle">payments API (idempotent, 16.3)</text>
+
+  <!-- routing -->
+  <rect x="300" y="94" width="220" height="34" rx="8" fill="#11161c" stroke="#1f6feb" stroke-width="1.4"/>
+  <text x="410" y="110" fill="#9fd0ff" font-size="10" font-weight="700" text-anchor="middle">Vitess routing + per-op consistency (16.5)</text>
+  <text x="410" y="123" fill="#cde3ff" font-size="8" text-anchor="middle">money read→primary (strong) · report→replica (eventual)</text>
+  <path d="M410 86 L410 92" stroke="#58a6ff" stroke-width="1.3"/>
+
+  <!-- THE CORE: sharded ledger -->
+  <rect x="20" y="138" width="500" height="180" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="1.6"/>
+  <text x="270" y="158" fill="#7ee2a8" font-size="12" font-weight="700" text-anchor="middle">THE CORE — immutable double-entry ledger, SHARDED by tenant (M11/11.9)</text>
+  <g>
+    <rect x="36" y="168" width="150" height="130" rx="8" fill="#13361f" stroke="#2ea043"/>
+    <text x="111" y="186" fill="#7ee2a8" font-size="9.5" font-weight="700" text-anchor="middle">SHARD 1</text>
+    <rect x="48" y="194" width="126" height="34" rx="4" fill="#0d1b12" stroke="#2ea043"/><text x="111" y="208" fill="#a8e6c2" font-size="7.5" text-anchor="middle">transfer = single-shard</text><text x="111" y="220" fill="#a8e6c2" font-size="7.5" text-anchor="middle">ACID (M07–M09, 16.4)</text>
+    <text x="111" y="242" fill="#8b98a5" font-size="7.5" text-anchor="middle">debit+credit+entries+</text>
+    <text x="111" y="253" fill="#8b98a5" font-size="7.5" text-anchor="middle">idempotency+outbox</text>
+    <rect x="48" y="260" width="40" height="16" rx="3" fill="#1b3a5c" stroke="#2f6db5"/><text x="68" y="272" fill="#cde3ff" font-size="6.5" text-anchor="middle">primary</text>
+    <rect x="92" y="260" width="36" height="16" rx="3" fill="#2d2150" stroke="#8957e5"/><text x="110" y="272" fill="#d2a8ff" font-size="6.5" text-anchor="middle">replica</text>
+    <rect x="132" y="260" width="36" height="16" rx="3" fill="#2d2150" stroke="#8957e5"/><text x="150" y="272" fill="#d2a8ff" font-size="6.5" text-anchor="middle">replica</text>
+    <text x="111" y="290" fill="#a8e6c2" font-size="7" text-anchor="middle">semi-sync (M10) · history partitioned</text>
+  </g>
+  <g>
+    <rect x="196" y="168" width="150" height="130" rx="8" fill="#13361f" stroke="#2ea043"/>
+    <text x="271" y="186" fill="#7ee2a8" font-size="9.5" font-weight="700" text-anchor="middle">SHARD 2</text>
+    <rect x="208" y="194" width="126" height="34" rx="4" fill="#0d1b12" stroke="#2ea043"/><text x="271" y="208" fill="#a8e6c2" font-size="7.5" text-anchor="middle">immutable entries (16.2)</text><text x="271" y="220" fill="#a8e6c2" font-size="7.5" text-anchor="middle">balances DERIVED</text>
+    <text x="271" y="242" fill="#8b98a5" font-size="7.5" text-anchor="middle">IDs: ULID/Snowflake</text>
+    <text x="271" y="253" fill="#8b98a5" font-size="7.5" text-anchor="middle">money = minor units (M03)</text>
+    <rect x="208" y="260" width="40" height="16" rx="3" fill="#1b3a5c" stroke="#2f6db5"/><text x="228" y="272" fill="#cde3ff" font-size="6.5" text-anchor="middle">primary</text>
+    <rect x="252" y="260" width="36" height="16" rx="3" fill="#2d2150" stroke="#8957e5"/><text x="270" y="272" fill="#d2a8ff" font-size="6.5" text-anchor="middle">replica</text>
+    <rect x="292" y="260" width="36" height="16" rx="3" fill="#2d2150" stroke="#8957e5"/><text x="310" y="272" fill="#d2a8ff" font-size="6.5" text-anchor="middle">replica</text>
+    <text x="271" y="290" fill="#a8e6c2" font-size="7" text-anchor="middle">cross-shard → Saga (M12/12.8)</text>
+  </g>
+  <g>
+    <rect x="356" y="168" width="150" height="130" rx="8" fill="#13361f" stroke="#2ea043"/>
+    <text x="431" y="186" fill="#7ee2a8" font-size="9.5" font-weight="700" text-anchor="middle">SHARD 3</text>
+    <rect x="368" y="194" width="126" height="34" rx="4" fill="#0d1b12" stroke="#2ea043"/><text x="431" y="208" fill="#a8e6c2" font-size="7.5" text-anchor="middle">multi-currency (16.9)</text><text x="431" y="220" fill="#a8e6c2" font-size="7.5" text-anchor="middle">holds/two-phase (16.4)</text>
+    <text x="431" y="242" fill="#8b98a5" font-size="7.5" text-anchor="middle">hot-account relief (16.6)</text>
+    <text x="431" y="253" fill="#8b98a5" font-size="7.5" text-anchor="middle">cross-region DR replica</text>
+    <rect x="368" y="260" width="40" height="16" rx="3" fill="#1b3a5c" stroke="#2f6db5"/><text x="388" y="272" fill="#cde3ff" font-size="6.5" text-anchor="middle">primary</text>
+    <rect x="412" y="260" width="36" height="16" rx="3" fill="#2d2150" stroke="#8957e5"/><text x="430" y="272" fill="#d2a8ff" font-size="6.5" text-anchor="middle">replica</text>
+    <rect x="452" y="260" width="36" height="16" rx="3" fill="#2d2150" stroke="#8957e5"/><text x="470" y="272" fill="#d2a8ff" font-size="6.5" text-anchor="middle">replica</text>
+    <text x="431" y="290" fill="#a8e6c2" font-size="7" text-anchor="middle">audit/compliance on the ledger (16.8)</text>
+  </g>
+  <path d="M410 128 L270 166" stroke="#58a6ff" stroke-width="1" marker-end="url(#b)"/>
+
+  <!-- integration backbone -->
+  <rect x="530" y="138" width="270" height="180" rx="10" fill="#11161c" stroke="#8957e5" stroke-width="1.4"/>
+  <text x="665" y="158" fill="#d2a8ff" font-size="11" font-weight="700" text-anchor="middle">INTEGRATION BACKBONE (16.12)</text>
+  <rect x="546" y="168" width="238" height="26" rx="5" fill="#2d2150" stroke="#8957e5"/><text x="665" y="185" fill="#e7d6ff" font-size="8.5" text-anchor="middle">outbox event (atomic, M12/12.11) → no dual-write</text>
+  <rect x="546" y="200" width="238" height="26" rx="5" fill="#2d2150" stroke="#8957e5"/><text x="665" y="217" fill="#e7d6ff" font-size="8.5" text-anchor="middle">Debezium CDC → Kafka (M12/12.12)</text>
+  <rect x="546" y="232" width="113" height="22" rx="4" fill="#13361f" stroke="#2ea043"/><text x="602" y="247" fill="#a8e6c2" font-size="7.5" text-anchor="middle">fraud</text>
+  <rect x="667" y="232" width="117" height="22" rx="4" fill="#13361f" stroke="#2ea043"/><text x="725" y="247" fill="#a8e6c2" font-size="7.5" text-anchor="middle">notifications</text>
+  <rect x="546" y="258" width="113" height="22" rx="4" fill="#13361f" stroke="#2ea043"/><text x="602" y="273" fill="#a8e6c2" font-size="7.5" text-anchor="middle">search</text>
+  <rect x="667" y="258" width="117" height="22" rx="4" fill="#1b3a5c" stroke="#2f6db5"/><text x="725" y="273" fill="#cde3ff" font-size="7.5" text-anchor="middle">warehouse (HTAP)</text>
+  <text x="665" y="296" fill="#cdb4ff" font-size="7.5" text-anchor="middle">idempotent consumers (M12/12.13) = exactly-once effect</text>
+  <path d="M520 220 L544 220" stroke="#8957e5" stroke-width="1.2" marker-end="url(#p)"/>
+
+  <!-- reconciliation -->
+  <rect x="20" y="332" width="780" height="46" rx="10" fill="#11161c" stroke="#1f6feb" stroke-width="1.4"/>
+  <text x="410" y="352" fill="#9fd0ff" font-size="11" font-weight="700" text-anchor="middle">THE BACKSTOP — reconciliation (16.7, M12/12.14): re-derive balances from the immutable ledger · match external records · daily</text>
+  <text x="410" y="370" fill="#cde3ff" font-size="9.5" text-anchor="middle">runs on replicas/warehouse (fed by CDC) → detect/repair ANY drift (half-Saga, missed event, bug, lost update)</text>
+
+  <!-- ops + DR -->
+  <rect x="20" y="390" width="385" height="48" rx="9" fill="#11161c" stroke="#d29922" stroke-width="1.3"/>
+  <text x="212" y="410" fill="#f0c674" font-size="10.5" font-weight="700" text-anchor="middle">OPERABLE (M13)</text>
+  <text x="212" y="428" fill="#f5e6c7" font-size="8.5" text-anchor="middle">tested backups+PITR · early-warning · online DDL · security · monitoring</text>
+
+  <rect x="415" y="390" width="385" height="48" rx="9" fill="#11161c" stroke="#da3633" stroke-width="1.3"/>
+  <text x="607" y="410" fill="#ff7b72" font-size="10.5" font-weight="700" text-anchor="middle">SURVIVABLE (M15)</text>
+  <text x="607" y="428" fill="#f5b7b3" font-size="8.5" text-anchor="middle">prevention checklist · DR: RPO≈0 + fenced failover + tested PITR (16.11)</text>
+
+  <!-- the guarantee -->
+  <rect x="20" y="450" width="780" height="80" rx="10" fill="#0d1b12" stroke="#2ea043" stroke-width="1.6"/>
+  <text x="410" y="472" fill="#7ee2a8" font-size="12.5" font-weight="700" text-anchor="middle">💰 MONEY NEVER LIES, END TO END — a payment is:</text>
+  <text x="410" y="494" fill="#a8e6c2" font-size="9.5" text-anchor="middle">ATOMIC (single-shard ACID) · IDEMPOTENT (no double-charge) · DURABLE beyond node/region loss (semi-sync + cross-region)</text>
+  <text x="410" y="510" fill="#a8e6c2" font-size="9.5" text-anchor="middle">· never LOST in propagation (outbox/CDC) · SURVIVABLE through catastrophe (M15) · always PROVABLE + RECOVERABLE (ledger + reconciliation)</text>
+  <text x="410" y="526" fill="#8b98a5" font-size="9.5" text-anchor="middle">the synthesis of the entire journey (M01→M16): a correct, scalable, operable, survivable, money-never-lies fintech platform on MySQL</text>
+
+  <defs>
+    <marker id="b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#58a6ff"/></marker>
+    <marker id="p" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8957e5"/></marker>
+  </defs>
+</svg>

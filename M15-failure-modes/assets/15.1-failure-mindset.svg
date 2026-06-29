@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="360" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">15.1 · The failure mindset — the worst failures are SILENT and RARE</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">a correct system handles the EXPECTED; this chapter is the unexpected catastrophes · know them BEFORE they happen</text>
+
+  <!-- two traits -->
+  <rect x="40" y="62" width="350" height="84" rx="10" fill="#11161c" stroke="#da3633" stroke-width="1.5"/>
+  <text x="215" y="84" fill="#ff7b72" font-size="12" font-weight="700" text-anchor="middle">SILENT</text>
+  <text x="215" y="106" fill="#f5b7b3" font-size="9.5" text-anchor="middle">the data is WRONG but nothing ERRORS —</text>
+  <text x="215" y="122" fill="#f5b7b3" font-size="9.5" text-anchor="middle">no exception, no alert, just incorrect money</text>
+  <text x="215" y="138" fill="#8b98a5" font-size="9" text-anchor="middle">(lost commit, forked replica, corrupt page, app race)</text>
+
+  <rect x="410" y="62" width="350" height="84" rx="10" fill="#11161c" stroke="#d29922" stroke-width="1.5"/>
+  <text x="585" y="84" fill="#f0c674" font-size="12" font-weight="700" text-anchor="middle">RARE</text>
+  <text x="585" y="106" fill="#f5e6c7" font-size="9.5" text-anchor="middle">strikes at the WORST moment —</text>
+  <text x="585" y="122" fill="#f5e6c7" font-size="9.5" text-anchor="middle">a power loss, a partition, a bad deploy</text>
+  <text x="585" y="138" fill="#8b98a5" font-size="9" text-anchor="middle">when you're least prepared</text>
+
+  <rect x="40" y="158" width="720" height="34" rx="8" fill="#3a1410" stroke="#da3633" stroke-width="1.3"/>
+  <text x="400" y="180" fill="#ff7b72" font-size="11" font-weight="700" text-anchor="middle">silent + rare + MONEY = the worst combination — it FESTERS undetected until reconciliation catches it (or a customer complains)</text>
+
+  <!-- the discipline -->
+  <text x="400" y="216" fill="#e6edf3" font-size="13" font-weight="700" text-anchor="middle">THE DISCIPLINE (against silent + rare)</text>
+
+  <rect x="30" y="228" width="180" height="76" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="120" y="248" fill="#7ee2a8" font-size="10.5" font-weight="700" text-anchor="middle">① KNOW</text>
+  <text x="120" y="268" fill="#a8e6c2" font-size="9" text-anchor="middle">the failure modes</text>
+  <text x="120" y="282" fill="#a8e6c2" font-size="9" text-anchor="middle">in advance</text>
+  <text x="120" y="298" fill="#8b98a5" font-size="8.5" text-anchor="middle">(this catalog)</text>
+
+  <rect x="218" y="228" width="180" height="76" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="308" y="248" fill="#7ee2a8" font-size="10.5" font-weight="700" text-anchor="middle">② WATCH</text>
+  <text x="308" y="268" fill="#a8e6c2" font-size="9" text-anchor="middle">early-warning signals</text>
+  <text x="308" y="282" fill="#a8e6c2" font-size="9" text-anchor="middle">(M13/13.11)</text>
+  <text x="308" y="298" fill="#8b98a5" font-size="8.5" text-anchor="middle">catastrophes build up</text>
+
+  <rect x="406" y="228" width="180" height="76" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="496" y="248" fill="#7ee2a8" font-size="10.5" font-weight="700" text-anchor="middle">③ TEST</text>
+  <text x="496" y="268" fill="#a8e6c2" font-size="9" text-anchor="middle">recovery (M13/13.5)</text>
+  <text x="496" y="282" fill="#a8e6c2" font-size="9" text-anchor="middle">PROVEN to work</text>
+  <text x="496" y="298" fill="#8b98a5" font-size="8.5" text-anchor="middle">disaster ≠ first time</text>
+
+  <rect x="594" y="228" width="180" height="76" rx="9" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="684" y="248" fill="#7ee2a8" font-size="10.5" font-weight="700" text-anchor="middle">④ RECONCILE</text>
+  <text x="684" y="268" fill="#a8e6c2" font-size="9" text-anchor="middle">(M12/12.14)</text>
+  <text x="684" y="282" fill="#a8e6c2" font-size="9" text-anchor="middle">detect what</text>
+  <text x="684" y="298" fill="#a8e6c2" font-size="9" text-anchor="middle">slipped through</text>
+
+  <rect x="40" y="318" width="720" height="34" rx="8" fill="#0d1b12" stroke="#2ea043" stroke-width="1.3"/>
+  <text x="400" y="340" fill="#7ee2a8" font-size="11" font-weight="700" text-anchor="middle">turns "the system is correct" into "and here's exactly what I do when it isn't" · assume failures WILL happen, design to detect/recover/prevent</text>
+</svg>

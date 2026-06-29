@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" font-family="-apple-system,Segoe UI,Roboto,sans-serif" font-size="13">
+  <rect width="800" height="460" fill="#0f1419"/>
+  <text x="400" y="26" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">13.16 · The operable payments platform — keeping the correct, scaled system alive</text>
+  <text x="400" y="46" fill="#8b98a5" font-size="12" text-anchor="middle">operations makes M01–M12's work survive contact with reality: recoverable · observable · changeable · resilient · secure · verified</text>
+
+  <!-- RECOVERABILITY -->
+  <rect x="20" y="62" width="375" height="118" rx="10" fill="#11161c" stroke="#2ea043" stroke-width="1.5"/>
+  <text x="207" y="84" fill="#7ee2a8" font-size="12" font-weight="700" text-anchor="middle">RECOVERABILITY (RPO≈0, fast RTO)</text>
+  <text x="207" y="104" fill="#a8e6c2" font-size="9.5" text-anchor="middle">XtraBackup/snapshot (per shard, from replicas, encrypted)</text>
+  <text x="207" y="120" fill="#a8e6c2" font-size="9.5" text-anchor="middle">+ continuous durable binlog → PITR (13.3, rewind any moment)</text>
+  <text x="207" y="136" fill="#7ee2a8" font-size="9.5" text-anchor="middle">+ automated RESTORE DRILLS + reconciliation (13.5)</text>
+  <text x="207" y="152" fill="#a8e6c2" font-size="9.5" text-anchor="middle">+ automated fenced failover (M10) — node loss handled</text>
+  <text x="207" y="172" fill="#8b98a5" font-size="9" text-anchor="middle">RPO≈0, fast RTO, PROVEN recoverable</text>
+
+  <!-- SAFE CHANGE -->
+  <rect x="405" y="62" width="375" height="118" rx="10" fill="#11161c" stroke="#1f6feb" stroke-width="1.4"/>
+  <text x="592" y="84" fill="#9fd0ff" font-size="12" font-weight="700" text-anchor="middle">SAFE CHANGE + RESILIENCE</text>
+  <text x="592" y="104" fill="#cde3ff" font-size="9.5" text-anchor="middle">online DDL — gh-ost/native (13.6–13.8):</text>
+  <text x="592" y="120" fill="#a8e6c2" font-size="9.5" text-anchor="middle">evolve the ledger schema WITHOUT locking transfers</text>
+  <text x="592" y="140" fill="#cde3ff" font-size="9.5" text-anchor="middle">connection pooling — ProxySQL (13.12): absorb storms</text>
+  <text x="592" y="160" fill="#cde3ff" font-size="9.5" text-anchor="middle">tuned config — buffer pool + full durability (M09/13.13)</text>
+  <text x="592" y="176" fill="#8b98a5" font-size="9" text-anchor="middle">the MONEY settings: flush_log=1, sync_binlog=1, semi-sync</text>
+
+  <!-- OBSERVABILITY -->
+  <rect x="20" y="190" width="375" height="118" rx="10" fill="#11161c" stroke="#d29922" stroke-width="1.4"/>
+  <text x="207" y="212" fill="#f0c674" font-size="12" font-weight="700" text-anchor="middle">OBSERVABILITY + VERIFICATION</text>
+  <text x="207" y="232" fill="#f5e6c7" font-size="9.5" text-anchor="middle">metrics/logs/golden signals (13.9) + slow log/sys/P_S (13.10)</text>
+  <text x="207" y="248" fill="#f5e6c7" font-size="9.5" text-anchor="middle">EARLY-WARNING signals (13.11): lag, HLL, checkpoint age,</text>
+  <text x="207" y="262" fill="#f5e6c7" font-size="9.5" text-anchor="middle">connections, semi-sync status (M10/10.12), disk</text>
+  <text x="207" y="282" fill="#7ee2a8" font-size="9.5" text-anchor="middle">+ RECONCILIATION watchdog (M12/12.14)</text>
+  <text x="207" y="300" fill="#8b98a5" font-size="9" text-anchor="middle">trouble caught EARLY, not as a 3am outage</text>
+
+  <!-- SECURITY -->
+  <rect x="405" y="190" width="375" height="118" rx="10" fill="#11161c" stroke="#8957e5" stroke-width="1.4"/>
+  <text x="592" y="212" fill="#d2a8ff" font-size="12" font-weight="700" text-anchor="middle">SECURITY (defense in depth, 13.14)</text>
+  <text x="592" y="232" fill="#e7d6ff" font-size="9.5" text-anchor="middle">per-service LEAST PRIVILEGE (no root in apps)</text>
+  <text x="592" y="248" fill="#e7d6ff" font-size="9.5" text-anchor="middle">TLS everywhere · encrypted data + backups (KMS)</text>
+  <text x="592" y="264" fill="#e7d6ff" font-size="9.5" text-anchor="middle">column encryption for card/PII (M03)</text>
+  <text x="592" y="280" fill="#e7d6ff" font-size="9.5" text-anchor="middle">full AUDIT trail (compliance + forensics)</text>
+  <text x="592" y="300" fill="#8b98a5" font-size="9" text-anchor="middle">non-negotiable + regulated for money</text>
+
+  <!-- substrate -->
+  <rect x="20" y="318" width="760" height="44" rx="9" fill="#11161c" stroke="#30363d" stroke-width="1.2"/>
+  <text x="400" y="338" fill="#8b98a5" font-size="10.5" text-anchor="middle">all PER SHARD (M11), platform-wide coordinated · on the correct (M01–M09) + scaled (M10–M12) ledger</text>
+  <text x="400" y="354" fill="#8b98a5" font-size="9.5" text-anchor="middle">derived from requirements: RPO≈0 + fast RTO + PCI-DSS + high value + sharded → the FULL posture (13.15)</text>
+
+  <!-- bottom -->
+  <rect x="20" y="372" width="760" height="76" rx="10" fill="#0d1b12" stroke="#2ea043" stroke-width="1.4"/>
+  <text x="400" y="394" fill="#7ee2a8" font-size="11.5" font-weight="700" text-anchor="middle">correctness + scalability are necessary but NOT sufficient — a high-value system is trustworthy only if it's OPERABLE</text>
+  <text x="400" y="416" fill="#a8e6c2" font-size="9.5" text-anchor="middle">recoverable (and proven so) · observable (leading indicators) · safely changeable · resilient · secure in depth · continuously verified</text>
+  <text x="400" y="436" fill="#a8e6c2" font-size="9.5" text-anchor="middle">money never lies in production because the OPERATIONS keep it correct, recoverable, and secure · the FAILURES of each topic → M15</text>
+</svg>
