@@ -183,20 +183,63 @@ ${nav}
 <div class="layout">
 ${body}
 </div>
-<button id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">◐</button>
+<div id="reading-dock" aria-label="Reading tools">
+  <button id="dock-toggle" title="Reading tools" aria-label="Reading tools">⚙</button>
+  <div id="dock-panel" hidden>
+    <div class="dock-title">Reading comfort</div>
+    <div class="dock-row">
+      <span class="dock-lbl">Text size</span>
+      <div class="dock-seg" role="group">
+        <button data-fs="M" title="Default">A</button>
+        <button data-fs="L" title="Large">A+</button>
+        <button data-fs="XL" title="Extra large">A++</button>
+      </div>
+    </div>
+    <button class="dock-opt" data-opt="focus" title="Dim everything except the section you're reading"><span class="do-ic">◎</span> Focus mode <span class="do-state"></span></button>
+    <button class="dock-opt" data-opt="bionic" title="Bold the start of each word to help your eyes track"><span class="do-ic">𝐛</span> Bionic reading <span class="do-state"></span></button>
+    <button class="dock-opt" data-opt="ruler" title="A highlight band that follows your cursor line"><span class="do-ic">▭</span> Reading ruler <span class="do-state"></span></button>
+    <button class="dock-opt" data-opt="calm" title="Hide diagrams &amp; code until you click them — less on screen at once"><span class="do-ic">🍃</span> Calm mode <span class="do-state"></span></button>
+    <button class="dock-opt" data-opt="theme" title="Light / dark"><span class="do-ic">◐</span> Theme <span class="do-state"></span></button>
+    <div class="dock-tip">Tip: <kbd>f</kbd> focus · <kbd>j</kbd>/<kbd>k</kbd> next/prev section</div>
+  </div>
+</div>
+<div id="reading-ruler" hidden></div>
 <script>window.__BASE__='${isHome ? '' : '../'}';window.__ACTIVE__='${activeCode || ''}';</script>
 <script src="${isHome ? '' : '../'}manifest.js"></script>
 <script src="${isHome ? '' : '../'}app.js"></script>
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-mermaid.initialize({ startOnLoad:false, theme:'dark', themeVariables:{
-  fontFamily:'ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto',
-  fontSize:'14px', primaryColor:'#11161c', primaryTextColor:'#e6edf3',
-  primaryBorderColor:'#30363d', lineColor:'#8b98a5', secondaryColor:'#1b2430',
-  tertiaryColor:'#161b22', background:'#0f1419', mainBkg:'#11161c',
-  nodeBorder:'#30363d', clusterBkg:'#0d1117', clusterBorder:'#30363d',
-  edgeLabelBackground:'#0f1419', noteBkgColor:'#1c2430', noteTextColor:'#e6edf3', noteBorderColor:'#30363d'
-}});
+// High-contrast dark theme: lighter node fills, bright borders + text, readable edges.
+window.__mmDark__ = {
+  startOnLoad:false, theme:'base', securityLevel:'loose',
+  flowchart:{ htmlLabels:true, curve:'basis', nodeSpacing:55, rankSpacing:60, padding:14 },
+  sequence:{ actorFontSize:16, noteFontSize:15, messageFontSize:15 },
+  themeVariables:{
+    fontFamily:'ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto',
+    fontSize:'17px',
+    darkMode:true, background:'#0f1419',
+    primaryColor:'#1d2733', primaryTextColor:'#f2f6fb', primaryBorderColor:'#5b86c4',
+    secondaryColor:'#22304a', secondaryTextColor:'#f2f6fb', secondaryBorderColor:'#6e8fd0',
+    tertiaryColor:'#23303f', tertiaryTextColor:'#f2f6fb', tertiaryBorderColor:'#52627a',
+    mainBkg:'#1d2733', nodeBorder:'#5b86c4', nodeTextColor:'#f2f6fb',
+    lineColor:'#aab6c6', textColor:'#e9eef5',
+    edgeLabelBackground:'#0f1419', labelBackground:'#0f1419', labelTextColor:'#e9eef5',
+    clusterBkg:'#141b24', clusterBorder:'#3a4658',
+    noteBkgColor:'#2a3b2f', noteTextColor:'#eaf6ee', noteBorderColor:'#4e7a58',
+    titleColor:'#f2f6fb',
+    // state/sequence extras
+    actorBkg:'#1d2733', actorBorder:'#5b86c4', actorTextColor:'#f2f6fb',
+    activationBkgColor:'#22304a', signalColor:'#aab6c6', signalTextColor:'#e9eef5',
+    altBackground:'#141b24'
+  }
+};
+window.__mmLight__ = {
+  startOnLoad:false, theme:'default', securityLevel:'loose',
+  flowchart:{ htmlLabels:true, curve:'basis', nodeSpacing:55, rankSpacing:60, padding:14 },
+  themeVariables:{ fontFamily:'ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto', fontSize:'17px' }
+};
+const isLight = document.documentElement.getAttribute('data-theme')==='light';
+mermaid.initialize(isLight ? window.__mmLight__ : window.__mmDark__);
 window.__mermaid__ = mermaid;
 window.__renderMermaid__ && window.__renderMermaid__();
 </script>

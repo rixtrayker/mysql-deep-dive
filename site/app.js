@@ -252,9 +252,9 @@ function renderMermaid(theme){
 }
 function reRenderMermaid(theme){
   const mm=window.__mermaid__; if(!mm) return;
-  mm.initialize({startOnLoad:false, theme: theme==='light'?'default':'dark'});
+  mm.initialize(theme==='light' ? (window.__mmLight__||{startOnLoad:false,theme:'default'}) : (window.__mmDark__||{startOnLoad:false,theme:'base'}));
   document.querySelectorAll('.mermaid').forEach(n=>{
-    if(n._src){ n.textContent=n._src; n.removeAttribute('data-processed'); }
+    if(n._src){ n.textContent=n._src; n.removeAttribute('data-processed'); delete n.dataset.processed; }
   });
   renderMermaid(theme);
 }
@@ -271,6 +271,147 @@ document.addEventListener('keydown',e=>{
     if(target) window.scrollTo({top:target.offsetTop-66,behavior:'smooth'});
   }
 });
+
+/* ============================================================
+   READING-COMFORT TOOLS (ADHD-friendly)
+   font size · focus mode · bionic reading · reading ruler · calm mode
+   ============================================================ */
+const LS_PREFS='hpm.prefs.v1';
+function loadPrefs(){ try{ return JSON.parse(localStorage.getItem(LS_PREFS)||'{}'); }catch(e){ return {}; } }
+function savePrefs(p){ localStorage.setItem(LS_PREFS, JSON.stringify(p)); }
+let PREFS=loadPrefs();
+
+function applyPrefs(){
+  // font size
+  document.documentElement.setAttribute('data-fs', PREFS.fs||'M');
+  document.querySelectorAll('.dock-seg button').forEach(b=>b.classList.toggle('on', b.dataset.fs===(PREFS.fs||'M')));
+  // toggles
+  document.body.classList.toggle('focus-mode', !!PREFS.focus);
+  document.body.classList.toggle('calm-mode', !!PREFS.calm);
+  document.documentElement.classList.toggle('bionic', !!PREFS.bionic);
+  // dock button states
+  document.querySelectorAll('.dock-opt[data-opt]').forEach(b=>{
+    const o=b.dataset.opt;
+    if(o==='theme') return;
+    b.classList.toggle('on', !!PREFS[o]);
+  });
+  // ruler
+  const ruler=document.getElementById('reading-ruler');
+  if(ruler) ruler.hidden = !PREFS.ruler;
+  document.querySelector('.dock-opt[data-opt="ruler"]')?.classList.toggle('on', !!PREFS.ruler);
+  // apply derived effects
+  if(PREFS.bionic) applyBionic(); else removeBionic();
+  if(PREFS.calm) applyCalm();
+  if(PREFS.focus) updateFocus();
+}
+
+/* ---- dock open/close ---- */
+document.addEventListener('click',e=>{
+  if(e.target.closest('#dock-toggle')){
+    const p=document.getElementById('dock-panel'); if(p) p.hidden=!p.hidden; return;
+  }
+  if(!e.target.closest('#reading-dock')){ const p=document.getElementById('dock-panel'); if(p) p.hidden=true; }
+
+  const fsBtn=e.target.closest('.dock-seg button[data-fs]');
+  if(fsBtn){ PREFS.fs=fsBtn.dataset.fs; savePrefs(PREFS); applyPrefs(); return; }
+
+  const opt=e.target.closest('.dock-opt[data-opt]');
+  if(opt){
+    const o=opt.dataset.opt;
+    if(o==='theme'){
+      const cur=document.documentElement.getAttribute('data-theme');
+      const nt=cur==='dark'?'light':'dark'; applyTheme(nt); localStorage.setItem(LS_THEME,nt); reRenderMermaid(nt); return;
+    }
+    PREFS[o]=!PREFS[o]; savePrefs(PREFS); applyPrefs();
+    if(o==='focus'&&PREFS.focus) toast('Focus mode on — everything else dims','◎');
+    if(o==='bionic'&&PREFS.bionic) toast('Bionic reading on','𝐛');
+    if(o==='calm'&&PREFS.calm) toast('Calm mode — diagrams hidden until you click','🍃');
+    return;
+  }
+
+  // calm-mode reveal on click
+  const blurred=e.target.closest('.mermaid, .pass-visual img');
+  if(blurred && document.body.classList.contains('calm-mode') && !blurred.classList.contains('revealed')){
+    blurred.classList.add('revealed'); blurred.querySelector?.('.reveal-tag')?.remove(); e.preventDefault();
+  }
+});
+
+/* ---- BIONIC: bold the leading chunk of each word in prose paragraphs/list items ---- */
+function bionicWord(w){
+  if(w.length<=1) return w;
+  const n = w.length<=3?1 : w.length<=6?2 : Math.ceil(w.length*0.42);
+  return '<b class="bi">'+w.slice(0,n)+'</b>'+w.slice(n);
+}
+function applyBionic(){
+  document.querySelectorAll('.concept-body p, .concept-body li').forEach(el=>{
+    if(el.dataset.bionic) return;
+    el.dataset.orig = el.innerHTML;
+    // walk text nodes only (skip code/links/strong markup targets lightly)
+    const walk=node=>{
+      for(const child of [...node.childNodes]){
+        if(child.nodeType===3){ // text
+          const html=child.textContent.replace(/([A-Za-zÀ-ɏ]{2,})/g, m=>bionicWord(m));
+          if(html!==child.textContent){ const span=document.createElement('span'); span.innerHTML=html; child.replaceWith(span); }
+        } else if(child.nodeType===1 && !/^(CODE|A|PRE)$/.test(child.tagName)){ walk(child); }
+      }
+    };
+    walk(el); el.dataset.bionic='1';
+  });
+}
+function removeBionic(){
+  document.querySelectorAll('.concept-body [data-bionic]').forEach(el=>{
+    if(el.dataset.orig!=null){ el.innerHTML=el.dataset.orig; delete el.dataset.orig; delete el.dataset.bionic; }
+  });
+}
+
+/* ---- CALM: tag blurred media with a 'click to reveal' overlay ---- */
+function applyCalm(){
+  document.querySelectorAll('.mermaid, .pass-visual .concept-body img').forEach(el=>{
+    if(el.classList.contains('revealed')||el.querySelector?.('.reveal-tag')) return;
+    if(el.tagName==='IMG'){ /* imgs can't hold children; wrap */ return; }
+    const tag=document.createElement('div'); tag.className='reveal-tag'; tag.textContent='🍃 click to reveal diagram';
+    el.style.position='relative'; el.appendChild(tag);
+  });
+}
+
+/* ---- FOCUS: mark the section nearest the top as active ---- */
+let focusEls=[];
+function updateFocus(){
+  if(!document.body.classList.contains('focus-mode')) return;
+  if(!focusEls.length) focusEls=[...document.querySelectorAll('.concept')];
+  const probe=120; let active=focusEls[0];
+  for(const s of focusEls){ if(s.getBoundingClientRect().top-probe<=0) active=s; else break; }
+  focusEls.forEach(s=>s.classList.toggle('focus-active', s===active));
+}
+
+/* ---- READING RULER follows the cursor ---- */
+document.addEventListener('mousemove',e=>{
+  if(!PREFS.ruler) return;
+  const r=document.getElementById('reading-ruler'); if(!r) return;
+  r.style.top=(e.clientY-21)+'px';
+},{passive:true});
+
+/* hook focus updates into scroll */
+window.addEventListener('scroll',()=>{ if(PREFS.focus) updateFocus(); },{passive:true});
+
+/* keyboard: f = focus toggle */
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea')) return;
+  if(e.key==='f'){ PREFS.focus=!PREFS.focus; savePrefs(PREFS); applyPrefs(); toast(PREFS.focus?'Focus mode on':'Focus mode off','◎'); }
+});
+
+applyPrefs();
+
+/* one-time discoverability hint on the reading-tools dock */
+(function dockHint(){
+  if(localStorage.getItem('hpm.dockhint')) return;
+  const b=document.getElementById('dock-toggle');
+  if(b){ b.classList.add('hint'); setTimeout(()=>b.classList.remove('hint'),6500); }
+  // mark seen once they open it OR after a while
+  const seen=()=>{ localStorage.setItem('hpm.dockhint','1'); b&&b.classList.remove('hint'); };
+  document.getElementById('dock-toggle')?.addEventListener('click',seen,{once:true});
+  setTimeout(seen,8000);
+})();
 
 /* ---------- init ---------- */
 refreshUI();

@@ -24,9 +24,13 @@ html[data-theme="light"]{
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 16px)}
 body{
   margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
-  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
+  font-size:var(--fs-base, 18px);line-height:1.75;-webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;letter-spacing:.002em;
 }
+/* user-adjustable reading size — set via the A- / A+ controls (stored) */
+html{--fs-base:18px;--reading-w:880px}
+html[data-fs="L"]{--fs-base:20px;--reading-w:920px}
+html[data-fs="XL"]{--fs-base:22px;--reading-w:960px}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 ::selection{background:rgba(88,166,255,.28)}
@@ -127,7 +131,7 @@ a:hover{text-decoration:underline}
 #scrim{display:none}
 
 /* ---------- main content ---------- */
-#content{flex:1;min-width:0;max-width:920px;margin:0 auto;padding:34px 46px 120px}
+#content{flex:1;min-width:0;max-width:var(--reading-w,880px);margin:0 auto;padding:34px 50px 140px}
 .module-page{margin-right:var(--rail-w)}
 @media(min-width:1280px){ #content.module-page{margin-left:var(--side-w)} }
 
@@ -163,7 +167,7 @@ a:hover{text-decoration:underline}
 }
 .starred .concept-num{background:linear-gradient(135deg,var(--accent),var(--purple-2))}
 .concept-title{
-  flex:1;font-size:25px;line-height:1.2;font-weight:750;letter-spacing:-.018em;margin:0;
+  flex:1;font-size:1.7rem;line-height:1.22;font-weight:760;letter-spacing:-.018em;margin:0;
 }
 .concept .star{color:var(--amber-2);font-size:.7em;vertical-align:.12em}
 .concept-done{
@@ -185,13 +189,13 @@ a:hover{text-decoration:underline}
 .concept.is-done .concept-title{color:var(--ink-2)}
 
 /* ---------- prose ---------- */
-.concept-body{color:var(--ink-2);font-size:16px}
-.concept-body p{margin:0 0 16px}
-.concept-body strong{color:var(--ink);font-weight:680}
+.concept-body{color:var(--ink-2);font-size:1.02rem;line-height:1.78}
+.concept-body p{margin:0 0 18px;max-width:74ch}
+.concept-body strong{color:var(--ink);font-weight:700}
 .concept-body em{color:var(--ink);font-style:italic}
-.concept-body h3{font-size:17px;font-weight:700;color:var(--ink);margin:26px 0 10px;letter-spacing:-.01em}
-.concept-body ul,.concept-body ol{margin:0 0 16px;padding-left:22px}
-.concept-body li{margin:5px 0}
+.concept-body h3{font-size:1.12rem;font-weight:700;color:var(--ink);margin:30px 0 12px;letter-spacing:-.01em}
+.concept-body ul,.concept-body ol{margin:0 0 18px;padding-left:24px;max-width:74ch}
+.concept-body li{margin:8px 0}
 .concept-body li::marker{color:var(--ink-4)}
 .concept-body hr{border:0;border-top:1px solid var(--line);margin:24px 0}
 .concept-body blockquote{
@@ -210,7 +214,7 @@ a:hover{text-decoration:underline}
 /* code blocks */
 pre.code{
   margin:18px 0;padding:16px 18px;border-radius:12px;background:var(--panel-2);
-  border:1px solid var(--line-2);overflow-x:auto;font-size:13.2px;line-height:1.6;
+  border:1px solid var(--line-2);overflow-x:auto;font-size:.86rem;line-height:1.6;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.012);
 }
 pre.code code{font-family:var(--mono);background:none;border:0;padding:0;color:#cfe3ff;font-size:1em}
@@ -224,11 +228,30 @@ pre.code .language-sql{color:#cfe3ff}
 
 /* mermaid */
 .mermaid{
-  margin:22px 0;padding:16px;border-radius:12px;background:var(--bg-1);
+  margin:24px 0;padding:22px 18px;border-radius:14px;background:var(--bg-1);
   border:1px solid var(--line-2);overflow-x:auto;text-align:center;
 }
-.mermaid svg{max-width:100%;height:auto}
+.mermaid svg{max-width:100%;height:auto;font-size:16px}
 .mermaid:not([data-processed]){color:var(--ink-4);font-family:var(--mono);font-size:12px;white-space:pre;text-align:left}
+/* dark-mode contrast safety net — force readable node text + edges regardless of mermaid internals */
+html[data-theme="dark"] .mermaid svg .nodeLabel,
+html[data-theme="dark"] .mermaid svg .edgeLabel,
+html[data-theme="dark"] .mermaid svg .label,
+html[data-theme="dark"] .mermaid svg text{ fill:#f2f6fb !important; color:#f2f6fb !important; }
+html[data-theme="dark"] .mermaid svg .edgeLabel rect,
+html[data-theme="dark"] .mermaid svg .edgeLabel .label-container{ fill:#0f1419 !important; opacity:.92; }
+html[data-theme="dark"] .mermaid svg .node rect,
+html[data-theme="dark"] .mermaid svg .node circle,
+html[data-theme="dark"] .mermaid svg .node polygon,
+html[data-theme="dark"] .mermaid svg .node path{ stroke-width:1.6px !important; }
+html[data-theme="dark"] .mermaid svg .edgePath path,
+html[data-theme="dark"] .mermaid svg .flowchart-link{ stroke:#aab6c6 !important; stroke-width:1.6px !important; }
+html[data-theme="dark"] .mermaid svg marker path,
+html[data-theme="dark"] .mermaid svg .arrowMarkerPath{ fill:#aab6c6 !important; stroke:#aab6c6 !important; }
+html[data-theme="dark"] .mermaid svg .cluster rect{ stroke:#3a4658 !important; }
+/* zoom-on-click hint */
+.mermaid{cursor:zoom-in}
+.mermaid.zoomed{cursor:zoom-out;position:relative}
 
 /* ---------- the 3 passes, subtly differentiated ---------- */
 .pass{position:relative}
@@ -251,10 +274,10 @@ pre.code .language-sql{color:#cfe3ff}
   letter-spacing:.01em;color:var(--ink);background:var(--bg-3);border-bottom:1px solid var(--line);
 }
 .ebox-ic{font-size:15px;line-height:1}
-.ebox-b{padding:12px 16px 4px}
-.ebox-b p{margin:0 0 12px;font-size:14.5px}
-.ebox-b ul,.ebox-b ol{margin:0 0 12px}
-.ebox-b li{font-size:14.5px;margin:4px 0}
+.ebox-b{padding:14px 18px 6px}
+.ebox-b p{margin:0 0 13px;font-size:.97rem;line-height:1.7}
+.ebox-b ul,.ebox-b ol{margin:0 0 13px}
+.ebox-b li{font-size:.97rem;margin:7px 0;line-height:1.65}
 .ebox-b pre.code{margin:4px 0 12px}
 .ebox-b ol li::marker{font-weight:700;color:var(--ink-3)}
 /* per-type accent stripe */
@@ -325,13 +348,76 @@ table code{font-size:.85em}
 .flip b{font-size:13.5px;color:var(--ink);font-weight:600;line-height:1.3}
 .flip.next{text-align:right;margin-left:auto}
 
-/* ---------- theme toggle ---------- */
-#theme-toggle{
-  position:fixed;bottom:20px;left:20px;z-index:90;width:42px;height:42px;border-radius:50%;
-  background:var(--bg-2);border:1px solid var(--line-2);color:var(--ink-2);font-size:18px;
-  cursor:pointer;box-shadow:var(--shadow);transition:all .15s;
+/* ---------- reading-tools dock (ADHD comfort controls) ---------- */
+#reading-dock{position:fixed;bottom:20px;left:20px;z-index:95}
+#dock-toggle{
+  width:46px;height:46px;border-radius:50%;background:var(--bg-2);border:1px solid var(--line-2);
+  color:var(--ink-2);font-size:20px;cursor:pointer;box-shadow:var(--shadow);transition:all .15s;
 }
-#theme-toggle:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.06)}
+#dock-toggle:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.06)}
+#dock-toggle.hint{animation:dockpulse 2s ease-out 3;border-color:var(--accent);color:var(--accent)}
+@keyframes dockpulse{0%,100%{box-shadow:var(--shadow)}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 26%,transparent)}}
+@media(prefers-reduced-motion:reduce){#dock-toggle.hint{animation:none}}
+#dock-panel{
+  position:absolute;bottom:56px;left:0;width:248px;padding:14px;border-radius:14px;
+  background:var(--bg-2);border:1px solid var(--line-2);box-shadow:var(--shadow);
+}
+.dock-title{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px}
+.dock-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.dock-lbl{font-size:14px;color:var(--ink-2);font-weight:600}
+.dock-seg{display:flex;border:1px solid var(--line-2);border-radius:9px;overflow:hidden}
+.dock-seg button{background:var(--bg-3);border:0;color:var(--ink-3);padding:7px 11px;cursor:pointer;font-family:var(--sans);font-weight:700;border-right:1px solid var(--line-2)}
+.dock-seg button:last-child{border-right:0}
+.dock-seg button:nth-child(1){font-size:13px}.dock-seg button:nth-child(2){font-size:15px}.dock-seg button:nth-child(3){font-size:17px}
+.dock-seg button.on{background:var(--accent);color:#fff}
+.dock-opt{
+  display:flex;align-items:center;gap:10px;width:100%;text-align:left;margin:5px 0;
+  padding:10px 11px;border-radius:10px;background:var(--bg-3);border:1px solid transparent;
+  color:var(--ink-2);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:all .12s;
+}
+.dock-opt:hover{border-color:var(--line-2)}
+.dock-opt.on{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:var(--accent);color:var(--ink)}
+.do-ic{width:20px;text-align:center;font-size:15px}
+.do-state{margin-left:auto;font-size:11px;color:var(--ink-4);font-weight:700}
+.dock-opt.on .do-state::after{content:"ON";color:var(--green-2)}
+.dock-opt:not(.on) .do-state::after{content:"off"}
+.dock-tip{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-4);line-height:1.5}
+.dock-tip kbd{font-family:var(--mono);background:var(--bg-3);border:1px solid var(--line-2);border-radius:5px;padding:1px 5px;font-size:10.5px}
+
+/* ---------- FOCUS MODE: dim everything except the active section ---------- */
+body.focus-mode .concept{transition:opacity .3s,filter .3s}
+body.focus-mode .concept:not(.focus-active){opacity:.26;filter:saturate(.6)}
+body.focus-mode .concept.focus-active{opacity:1}
+body.focus-mode .module-hero,body.focus-mode .module-flips{opacity:.4}
+/* a soft spotlight cue on the active concept */
+body.focus-mode .concept.focus-active{position:relative}
+body.focus-mode .concept.focus-active::before{
+  content:"";position:absolute;left:-26px;top:30px;bottom:8px;width:3px;border-radius:3px;
+  background:linear-gradient(var(--accent),var(--green-2));opacity:.85;
+}
+
+/* ---------- BIONIC reading ---------- */
+.bionic b.bi{font-weight:800;color:var(--ink)}
+
+/* ---------- READING RULER ---------- */
+#reading-ruler{
+  position:fixed;left:0;right:0;height:42px;z-index:40;pointer-events:none;
+  background:rgba(120,170,255,.07);border-top:1px solid rgba(120,170,255,.16);
+  border-bottom:1px solid rgba(120,170,255,.16);mix-blend-mode:screen;transition:top .04s linear;
+}
+html[data-theme="light"] #reading-ruler{background:rgba(60,120,220,.08);mix-blend-mode:multiply}
+
+/* ---------- CALM mode: collapse diagrams/code until clicked ---------- */
+body.calm-mode .mermaid:not(.revealed),
+body.calm-mode .pass-visual .concept-body img:not(.revealed){
+  filter:blur(7px) saturate(.7);cursor:pointer;position:relative;
+}
+body.calm-mode .reveal-tag{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:var(--ink);background:rgba(15,20,25,.55);
+  border-radius:12px;cursor:pointer;letter-spacing:.02em;z-index:2;
+}
+.reveal-wrap{position:relative}
 
 /* ============================================================
    HOME PAGE
