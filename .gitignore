@@ -13,3 +13,6 @@ npm-debug.log*
 
 # empty/working
 contexts/
+
+# Local Netlify folder
+.netlify
