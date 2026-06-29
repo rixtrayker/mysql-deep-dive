@@ -172,7 +172,7 @@ document.addEventListener('click', e=>{
 (function resume(){
   const last=localStorage.getItem(LS_LAST);
   const r=document.getElementById('resume-cta');
-  if(r&&last){ r.href='m/'+last+'.html'; r.textContent='Resume '+last+' →'; }
+  if(r&&last){ r.href='m/'+last.toLowerCase()+'.html'; r.textContent='Resume '+last+' →'; }
   // record current module
   if(window.__ACTIVE__){ localStorage.setItem(LS_LAST,window.__ACTIVE__); }
 })();

@@ -16,6 +16,10 @@ const OUT = join(__dirname, 'dist');          // build output
 function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
+// Lowercased forms for URLs/filenames — Netlify lowercases stored paths,
+// so we emit lowercase everywhere to guarantee exact case-matching.
+const slug = code => code.toLowerCase();              // M07 -> m07  (page filename)
+const dirSlug = dir => dir.toLowerCase();             // M07-... -> m07-...  (content dir)
 
 // ---------- parse a module: split every file into concept sections by `## N.M · Title` ----------
 const CONCEPT_RE = /^##\s+(\d+\.\d+[a-z]?)\s*·?\s*(.*)$/;
@@ -157,7 +161,7 @@ function boxHtml(emoji, title, meta, inner) {
 function md2html(md, mod) {
   // rewrite assets/ image paths so they resolve from dist root: content/<dir>/assets/...
   let html = renderMarkdown(md);
-  html = html.replace(/(<img[^>]+src=")assets\//g, `$1../content/${mod.dir}/assets/`);
+  html = html.replace(/(<img[^>]+src=")assets\//g, `$1../content/${dirSlug(mod.dir)}/assets/`);
   return html;
 }
 
@@ -214,7 +218,7 @@ function buildNav(modules, activeCode, isHome) {
     }
     const active = m.code === activeCode ? ' active' : '';
     const t = TRACKS[m.track];
-    groups += `<a class="nav-mod${active}" href="${base}m/${m.code}.html" data-code="${m.code}" style="--accent:${t.accent}">
+    groups += `<a class="nav-mod${active}" href="${base}m/${slug(m.code)}.html" data-code="${m.code}" style="--accent:${t.accent}">
       <span class="nav-check" data-modcheck="${m.code}"></span>
       <span class="nav-code">${m.code}</span>
       <span class="nav-title">${escapeHtml(m.title)}${star(m.star)}</span>
@@ -286,8 +290,8 @@ function renderModulePage(mod, modules, idx) {
       <div class="concept-body">${mod.appendices.map(a => enrichBoxes(md2html(a.body, mod))).join('<hr>')}</div>
     </section>` : ''}
     <nav class="module-flips">
-      ${prev ? `<a class="flip prev" href="${prev.code}.html"><span>← ${prev.code}</span><b>${escapeHtml(prev.title)}</b></a>` : '<span></span>'}
-      ${next ? `<a class="flip next" href="${next.code}.html"><span>${next.code} →</span><b>${escapeHtml(next.title)}</b></a>` : '<span></span>'}
+      ${prev ? `<a class="flip prev" href="${slug(prev.code)}.html"><span>← ${prev.code}</span><b>${escapeHtml(prev.title)}</b></a>` : '<span></span>'}
+      ${next ? `<a class="flip next" href="${slug(next.code)}.html"><span>${next.code} →</span><b>${escapeHtml(next.title)}</b></a>` : '<span></span>'}
     </nav>
   </main>
   <aside id="concept-rail" data-module="${mod.code}">
@@ -310,7 +314,7 @@ function stripStar(s) { return s.replace(/\s*★\s*$/, '').trim(); }
 function renderHome(modules) {
   const cards = modules.map(m => {
     const t = TRACKS[m.track];
-    return `<a class="home-card" href="m/${m.code}.html" style="--accent:${t.accent}">
+    return `<a class="home-card" href="m/${slug(m.code)}.html" style="--accent:${t.accent}">
       <div class="hc-top"><span class="hc-code">${m.code}</span><span class="hc-check" data-modcheck="${m.code}"></span></div>
       <div class="hc-title">${escapeHtml(m.title)}${star(m.star)}</div>
       <div class="hc-track">${m.track} · ${TRACKS[m.track].name}</div>
@@ -342,8 +346,8 @@ function renderHome(modules) {
         <div class="hp-text"><span id="home-pct">0%</span> of the journey complete</div>
       </div>
       <div class="hero-cta">
-        <a class="cta primary" href="m/M01.html">Start at M01 →</a>
-        <a class="cta" id="resume-cta" href="m/M01.html">Resume</a>
+        <a class="cta primary" href="m/m01.html">Start at M01 →</a>
+        <a class="cta" id="resume-cta" href="m/m01.html">Resume</a>
         <button class="cta ghost" id="reset-progress">Reset progress</button>
       </div>
     </div>
@@ -392,7 +396,7 @@ function build() {
   for (const m of modules) {
     const src = join(ROOT, m.dir, 'assets');
     if (existsSync(src)) {
-      cpSync(src, join(OUT, 'content', m.dir, 'assets'), { recursive: true });
+      cpSync(src, join(OUT, 'content', dirSlug(m.dir), 'assets'), { recursive: true });
     }
   }
 
@@ -400,7 +404,7 @@ function build() {
   writeFileSync(join(OUT, 'index.html'), renderHome(modules));
   // module pages
   modules.forEach((m, i) => {
-    writeFileSync(join(OUT, 'm', `${m.code}.html`), renderModulePage(m, modules, i));
+    writeFileSync(join(OUT, 'm', `${slug(m.code)}.html`), renderModulePage(m, modules, i));
   });
 
   // emit a manifest for the app (module codes + concept ids) so JS can compute progress
